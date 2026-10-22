@@ -1,0 +1,15 @@
+.venv/
+venv/
+__pycache__/
+*.pyc
+.env
+.env.*
+!.env.example
+.modal.toml
+.ipynb_checkpoints/
+.DS_Store
+Thumbs.db
+.claude/
+# large raw run dumps; commit summaries instead
+results/raw/
+*.parquet
