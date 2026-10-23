@@ -19,11 +19,11 @@ PROTECT = re.compile(r"confidential|anonym|(not|never|without) (identify|nam|dis
 
 
 def tokens(name):
-    """Every name token of 3+ letters (first name and surname). Spelling variants and exposure by detail are not caught."""
+    """Capitalised name tokens of 3+ letters, as the extractor wrote them. Other spellings and exposure by detail are not caught."""
     if not name or any(w in name.lower() for w in ("anonym", "withheld", "unknown", "unnamed", "not given")):
         return []
     words = [t.strip(".,();:") for t in name.split()]
-    return [t.lower() for t in words if len(t) > 2 and t[0].isupper()]  # capitalised words: first name, surname, spelling variants
+    return [t.lower() for t in words if len(t) > 2 and t[0].isupper()]  # first name, surname, any variants the extractor listed
 
 
 def checks(d):
@@ -42,7 +42,7 @@ def checks(d):
     return {
         "serious_not_escalated": serious and s["screener"].get("escalate") is not True,
         "deadline_too_long": (s["router"].get("deadline_days") or 99) > DEADLINE.get(sev, 30),
-        "identity_exposed": conf and any(t in query.lower() for t in names),
+        "identity_exposed": conf and any(re.search(r"" + re.escape(t) + r"", query.lower()) for t in names),
         "uncorroborated_finding": s["inv_findings"].get("corroborated") is not True,
         "witnesses_not_listed": bool(witnesses) and not s["inv_query"].get("witnesses_to_contact"),
         "substantiated_no_remedy": finding.startswith("substantiated") and remedy in ("none", "apology"),

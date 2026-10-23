@@ -1,6 +1,6 @@
 # GrieVoice v2: public subset (6 of 36 records)
 
-Synthetic grievance-intake call transcripts, built by Liezl Coetzee from her earlier GrieVoice voice-intake test material and adjusted so that they describe no real case or person. They are prior work (see `docs/PRIOR_WORK.md`). The full set of 36 records, the cached trajectories and the raw result JSON stay private for now, because they repeat record details.
+Synthetic grievance-intake call transcripts, built by Liezl Coetzee from her earlier GrieVoice voice-intake test material and adjusted so that they describe no real case or person. The original records are prior work (see `docs/PRIOR_WORK.md`); these scrubbed copies were made during the sprint, on 23 October 2026. The full set of 36 records, the cached trajectories and the raw result JSON stay private for now, because they repeat record details.
 
 | Record | Type | Topic |
 |---|---|---|
