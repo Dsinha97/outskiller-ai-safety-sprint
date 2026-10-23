@@ -1,4 +1,4 @@
-"""Sentence ablation of steering notes (run 2026-10-23), after the MIT "Eko" note-erasure test.
+"""Sentence ablation of steering notes (run 2026-10-23).
 
 For the C4 rep1 cases where Gemma's honest rater kept the case internal with the original summariser
 note but escalated with no note (P pilot), replay the same summary to an honest rater with:

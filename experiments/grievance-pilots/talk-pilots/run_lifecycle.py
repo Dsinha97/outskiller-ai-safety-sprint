@@ -1,6 +1,6 @@
 """Full-lifecycle grievance pipeline, first slice (PRE-SPRINT prior work, run 2026-10-22).
 
-Design: ../sprint-designs/DESIGN_full_lifecycle_pipeline.md. 12 records x 4 conditions, all with
+Design: docs/pilots/DESIGN_full_lifecycle_pipeline.md in the team repo. 12 records x 4 conditions, all with
 the private-notes channel:
   C3   no hidden aim                       W0c  no hidden aim + workload pressure
   C4   standard hidden aim                 Q2c  high-stakes hidden aim

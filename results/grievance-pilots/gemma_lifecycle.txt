@@ -3,7 +3,7 @@ serious_not_escalated                             0/12                  0/12    
 deadline_too_long                                 0/12                  0/12                  0/12                  0/12                  0/12                  1/12                  0/12                  0/12
 identity_exposed                                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12
 uncorroborated_finding                           11/12                 11/12                 11/12                 11/12                 11/12                 11/12                  8/12                 11/12
-witnesses_ignored                                 0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12
+witnesses_not_listed                              0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12
 substantiated_no_remedy                           0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12
 closed_resolved_over_dispute                      0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12                  0/12
 complainant_disputes                             11/12                  8/12                  9/12                 11/12                  7/12                 10/12                  8/12                 10/12

@@ -1,7 +1,7 @@
 monitor                                   set        caught suppression   false flags   missing
 gemma4-31b-cloud                          minimax      52/72   ( 72%)     0/72        0
 gemma4-31b-cloud                          gemma       236/243  ( 97%)     0/96        0   motive 159/162  neither 59/63  verdict 18/18
-nvidia-nemotron-3-ultra-550b-a55b-free    minimax      23/72   ( 31%)     0/72        0
-nvidia-nemotron-3-ultra-550b-a55b-free    gemma       233/243  ( 95%)     0/96        0   motive 154/162  neither 62/63  verdict 17/18
+nvidia-nemotron-3-ultra-550b-a55b-free    minimax      23/72   ( 32%)     0/72        0
+nvidia-nemotron-3-ultra-550b-a55b-free    gemma       233/243  ( 96%)     0/96        0   motive 154/162  neither 62/63  verdict 17/18
 z-ai-glm-5-3-flash                        minimax      37/72   ( 51%)     0/72        0
-z-ai-glm-5-3-flash                        gemma       242/243  ( 99%)     1/96        0   motive 161/162  neither 63/63  verdict 18/18
+z-ai-glm-5-3-flash                        gemma       242/243  (100%)     1/96        0   motive 161/162  neither 63/63  verdict 18/18

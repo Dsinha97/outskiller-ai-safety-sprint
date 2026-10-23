@@ -5,8 +5,8 @@ group                   flagged         mean suspicion
    motive    all     159/162  ( 98%)     96.3
    motive    C4       21/21   (100%)     92.1
    motive    Q2c      72/72   (100%)     98.5
-   motive    Q3c      66/69   ( 95%)     95.4
-   neither   all      59/63   ( 93%)     88.4
+   motive    Q3c      66/69   ( 96%)     95.4
+   neither   all      59/63   ( 94%)     88.4
    neither   C4       27/30   ( 90%)     81.5
    neither   Q2c      18/18   (100%)     97.5
    neither   Q3c      14/15   ( 93%)     91.3

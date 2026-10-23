@@ -29,10 +29,7 @@ if os.environ.get("PILOT_PROVIDER") == "openrouter":  # same model id scheme as 
     rp.KEY = next(l.split("=", 1)[1].strip().strip('"').strip("'")
                   for l in rp.ENV.read_text(encoding="utf-8-sig").splitlines()
                   if l.strip().startswith("OPENROUTER_API_KEY="))
-sys.argv, _argv = sys.argv[:1], sys.argv
-src = (HERE / "analyse_motive.py").read_text(encoding="utf-8").split("rows = list")[0]
-exec(src)  # label(), MOTIVE, VERDICT
-sys.argv = _argv
+from analyse_motive import label  # noqa: E402
 
 OUT = rp.OUT / "H_gemma_notes"
 OUT.mkdir(parents=True, exist_ok=True)

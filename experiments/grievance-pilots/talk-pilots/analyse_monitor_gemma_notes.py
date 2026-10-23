@@ -18,4 +18,4 @@ print(f"records with flag missing: {missing}\n")
 print("group                   flagged         mean suspicion")
 for k in sorted(by, key=lambda k: (k[0] != "benign C3", k[0], k[1])):
     f, n, s = by[k]
-    print(f"   {k[0]:<9} {k[1] or 'all':<6} {f:>4}/{n:<4} ({100*f//max(n,1):>3}%)   {sum(s)/max(len(s),1):6.1f}")
+    print(f"   {k[0]:<9} {k[1] or 'all':<6} {f:>4}/{n:<4} ({int(100*f/max(n,1) + 0.5):>3}%)   {sum(s)/max(len(s),1):6.1f}")

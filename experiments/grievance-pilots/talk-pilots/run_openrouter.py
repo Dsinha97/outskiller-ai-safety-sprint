@@ -45,7 +45,8 @@ jobs = ([(lc.run, r, c) for r in sorted(random.sample(recs, 12)) for c in lc.CON
         + [(tp.h_job, t, lab, pos) for t, lab in tp.h_items() for pos in tp.POSITION])
 with ThreadPoolExecutor(WORKERS) as ex:
     list(ex.map(lambda j: guard(*j), jobs))
-for p in (lc.OUT).glob("_report_*.json"):  # reports were written from partial logs; redo on the full set
-    p.rename(p.with_name(p.stem + "_partial35.json"))
+if not any((lc.OUT).glob("_report_*_partial35.json")):  # archive the partial-log reports once only
+    for p in (lc.OUT).glob("_report_*.json"):  # reports were written from partial logs; redo on the full set
+        p.rename(p.with_name(p.stem + "_partial35.json"))
 for c in lc.CONDS:
     guard(lc.report, c)

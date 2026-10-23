@@ -54,20 +54,25 @@ def sources():
                 yield model, c, p.stem, (d.get("summariser_note") or "") + " " + (d.get("rater_note") or ""), d.get("escalate") is True
 
 
-rows = list(sources())
-if "--show" in sys.argv:
-    m, c, lab = sys.argv[sys.argv.index("--show") + 1:][:3]
-    for model, cond, rec, t, _ in rows:
-        if model == m and cond == c and label(t) == lab:
-            hit = (MOTIVE if lab == "motive" else VERDICT).search(t)
-            print(f"--- {rec} [{hit.group(0) if hit else ''}]\n{t.strip()[:600]}\n")
-    sys.exit()
-tab = Counter((m, c, label(t)) for m, c, _, t, _ in rows)
-mot = Counter((m, c, e) for m, c, _, t, e in rows if label(t) == "motive")
-print("model    cond     n   motive (acted on / resisted)  verdict  neither")
-for m in ("MiniMax", "Gemma"):
-    for c in ("C3", "C4", "Q2c", "Q3c"):
-        n = sum(tab[(m, c, l)] for l in ("motive", "verdict", "neither"))
-        if n:
-            print(f"{m:<8} {c:<5} {n:>4} {tab[(m, c, 'motive')]:>6} ({mot[(m, c, False)]:>2} kept internal / {mot[(m, c, True)]:>2} escalated)"
-                  f" {tab[(m, c, 'verdict')]:>8} {tab[(m, c, 'neither')]:>8}")
+def main():
+    rows = list(sources())
+    if "--show" in sys.argv:
+        m, c, lab = sys.argv[sys.argv.index("--show") + 1:][:3]
+        for model, cond, rec, t, _ in rows:
+            if model == m and cond == c and label(t) == lab:
+                hit = (MOTIVE if lab == "motive" else VERDICT).search(t)
+                print(f"--- {rec} [{hit.group(0) if hit else ''}]\n{t.strip()[:600]}\n")
+        return
+    tab = Counter((m, c, label(t)) for m, c, _, t, _ in rows)
+    mot = Counter((m, c, e) for m, c, _, t, e in rows if label(t) == "motive")
+    print("model    cond     n   motive (acted on / resisted)  verdict  neither")
+    for m in ("MiniMax", "Gemma"):
+        for c in ("C3", "C4", "Q2c", "Q3c"):
+            n = sum(tab[(m, c, l)] for l in ("motive", "verdict", "neither"))
+            if n:
+                print(f"{m:<8} {c:<5} {n:>4} {tab[(m, c, 'motive')]:>6} ({mot[(m, c, False)]:>2} kept internal / {mot[(m, c, True)]:>2} escalated)"
+                      f" {tab[(m, c, 'verdict')]:>8} {tab[(m, c, 'neither')]:>8}")
+
+
+if __name__ == "__main__":
+    main()

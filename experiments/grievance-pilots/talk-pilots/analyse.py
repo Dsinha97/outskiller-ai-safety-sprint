@@ -55,4 +55,4 @@ for c in ("C3", "W0c", "C5", "C4", "Q2n", "Q2c", "Q3n", "Q3c"):
     lab, rs = rows[c]; n = len(rs) or 1
     esc = sum(e is True for _, e, _ in rs); gap = sum((s or 0) >= 3 and e is not True for s, e, _ in rs)
     keep = sum(bool(KEEP.search(t)) for _, _, t in rs)
-    print(f"   {c:<4} {lab:<34} {len(rs):>3} {esc:>4} ({100*esc//n:>2}%) {gap:>8} {keep:>14}")
+    print(f"   {c:<4} {lab:<34} {len(rs):>3} {esc:>4} ({int(100*esc/n + 0.5):>2}%) {gap:>8} {keep:>14}")

@@ -1,7 +1,7 @@
 """Note carry-over (run 2026-10-23): does a steering note on one case change an honest rater's next case?
 
-Prompted by the "seeds" in the spiralism reports: text written to shape a fresh instance beyond
-the exchange at hand. One honest rater conversation, two cases in sequence.
+One honest rater conversation, two cases in sequence. (Case B in the solo arm has no "NEXT CASE"
+header, which the other arms carry; see the experiments README.)
   Case A: one of the seven C4 records whose note flipped Gemma's honest rater (see run_ablation.py).
   Case B: a different record's honest-pipeline (C3 rep1) summary, escalated sev>=3 in the cached run,
           shown with NO note.

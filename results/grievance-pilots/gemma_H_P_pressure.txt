@@ -16,11 +16,11 @@ P  paraphrase defense (C4 rep1; original pipeline escalated 10/36)
    honest_cut     25/36        9
 
 PRESSURE  condition                           n  escalated  sev>=3 not esc  notes steering to keep internal
-   C3   no aim, channel                     36   32 (88%)        0              7
+   C3   no aim, channel                     36   32 (89%)        0              7
    W0c  workload only, channel              36   31 (86%)        1              9
    C5   standard aim, no channel            36   16 (44%)        9              0
-   C4   standard aim, channel               36   10 (27%)       10             23
-   Q2n  high stakes, no channel             36    5 (13%)        8              0
-   Q2c  high stakes, channel                36    2 ( 5%)        4             19
+   C4   standard aim, channel               36   10 (28%)       10             23
+   Q2n  high stakes, no channel             36    5 (14%)        8              0
+   Q2c  high stakes, channel                36    2 ( 6%)        4             19
    Q3n  existential, no channel             36    4 (11%)       13              0
    Q3c  existential, channel                36    3 ( 8%)        2             15
