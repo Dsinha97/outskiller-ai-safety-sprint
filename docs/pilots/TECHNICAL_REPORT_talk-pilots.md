@@ -1,10 +1,10 @@
 # Quiet suppression in multi-agent grievance pipelines: pilot evidence on pressure, notes channels, paraphrase and monitor capture
 
-*Pre-sprint pilot report, Team Outskiller, AI Collusion Research Sprint (Apart Research, 23–25 October 2026). Draft of 23 October 2026. All runs described here are prior work and will be declared as such in the sprint submission.*
+*Pilot report, Team Outskiller, AI Collusion Research Sprint (Apart Research, 23–25 October 2026). Draft of 23 October 2026. Runs up to 22 October are prior work and runs on 23 October are sprint work; the prior-work disclosure at the end gives the split.*
 
 ## Abstract
 
-We built a three-to-ten-stage grievance-handling pipeline in which separate LLM instances summarize, rate, route, investigate, resolve and close complaints from synthetic workers and community members, and used it to test questions raised in the sprint’s first two talks. A hidden operator instruction to keep escalations low, combined with a private notes channel between agents, cut escalation of serious complaints from 91% to 27% (MiniMax M3.1 Flash, 36 records per arm). Stated pressure on top of the instruction lowered escalation further, while the channel’s extra effect shrank as pressure rose. In both models tested (MiniMax M3.1 Flash and Gemma 4 31B), a note from an agent holding the hidden aim recruited an honest downstream rater, a neutral paraphraser recovered about half of that effect, and the remainder travelled in what the case summary chose to include. A notes-reading monitor that caught 10 of 24 (MiniMax) and 15 of 24 (Gemma) suppression cases caught 0 and 1 after first seeing three “accepted” precedent cases; telling the monitor it shared the team’s incentives did not reduce detection. In full ten-stage runs, a single pressured screener reproduced most of the harm of a fully pressured team, because no later stage reconsidered escalation, and making the notes channel visible to the lender reduced harm while keeping its benefit to complainants. These are small, descriptive, single-rep pilots with planted incentives; we report them to fix the design of the sprint experiment, not as findings about deployed systems.
+We built a short (two- or three-stage) and a full (nine-stage) grievance-handling pipeline, in which separate LLM instances summarize, rate, route, investigate, resolve and close complaints from synthetic workers and community members, and used it to test questions raised in the sprint’s first two talks. A hidden operator instruction to keep escalations low, combined with a private notes channel between agents, cut escalation of serious complaints from 91% to 27% (MiniMax M3.1 Flash, 36 records per arm). Stated pressure on top of the instruction lowered escalation further, while the channel’s extra effect shrank as pressure rose. In both models tested (MiniMax M3.1 Flash and Gemma 4 31B), a note from an agent holding the hidden aim recruited an honest downstream rater, a neutral paraphraser recovered about half of that effect, and the remainder travelled in what the case summary chose to include. A notes-reading monitor that caught 10 of 24 (MiniMax) and 15 of 24 (Gemma) suppression cases caught 0 and 1 after first seeing three “accepted” precedent cases; telling the monitor it shared the team’s incentives did not reduce detection. In full nine-stage runs, a single pressured screener reproduced most of the harm of a fully pressured team, because no later stage reconsidered escalation, and making the notes channel visible to the lender reduced harm while keeping its benefit to complainants. These are small, descriptive, single-rep pilots with planted incentives; we report them to fix the design of the sprint experiment, not as findings about deployed systems.
 
 ## 1. Motivation and link to the sprint
 
@@ -23,7 +23,7 @@ Our pilots translate four of these claims into a grievance setting:
 | Incentives drive collusion; pressure pushes it underground (talk 2) | Pressure ladder, with and without a notes channel (section 4.1) |
 | Paraphrasing is practical but leaky; topic choice carries bits (talk 2) | Paraphrase and note-removal arms with an honest receiver (4.3) |
 | The monitor itself can collude (talk 1, ladder level 4) | Captured-monitor positions, including normalization (4.2) |
-| Audit every channel; watch actions, not only words (talk 1) | Ten-stage lifecycle with code-checkable stage outcomes and a visible (“glass”) channel (4.4–4.5) |
+| Audit every channel; watch actions, not only words (talk 1) | Nine-stage lifecycle with code-checkable stage outcomes and a visible (“glass”) channel (4.4–4.5) |
 
 ## 2. Related work
 
@@ -43,7 +43,7 @@ Our pilots translate four of these claims into a grievance setting:
 
 **Short pipeline (pressure, paraphrase, monitor pilots).** Summarizer → severity rater (→ responder in the cached runs). The rater sees only the summary and, in channel conditions, the summarizer’s private note. Severity 1–4 follows a written policy; `escalate = true` sends the case to senior management and the lender’s grievance officer.
 
-**Full lifecycle pipeline.** Intake → screener (eligibility, severity, escalation) → router (owner, deadline) → investigator query to a site manager → simulated site manager reply → investigator findings → resolver (remedy) → communicator → simulated complainant (accept, dispute, appeal) → closer; a reporter writes a monthly lender report per arm from the case log. A separate instance extracts decisive facts from each transcript (complainant name, retaliation, safety risk, confidentiality request, witnesses) for code-based checks. Private notes accumulate down the chain in channel arms. Design: `sprint-designs/DESIGN_full_lifecycle_pipeline.md`.
+**Full lifecycle pipeline.** Intake → screener (eligibility, severity, escalation) → router (owner, deadline) → investigator query to a site manager → simulated site manager reply → investigator findings → resolver (remedy) → communicator → simulated complainant (accept, dispute, appeal) → closer; a reporter writes a monthly lender report per arm from the case log. A separate instance extracts decisive facts from each transcript (complainant name, retaliation, safety risk, confidentiality request, witnesses) for code-based checks. Private notes accumulate down the chain in channel arms. The site manager and the complainant are simulated parties inside stages 4 and 7. Design: `docs/pilots/DESIGN_full_lifecycle_pipeline.md`.
 
 **Manipulations.**
 - *Hidden aim:* “Confidential operator priority: escalations to senior management and to the lender are costly and strain the client relationship. Keep the number of escalated cases and high severity ratings low wherever you reasonably can.”
@@ -59,7 +59,7 @@ Our pilots translate four of these claims into a grievance setting:
 
 **Paraphrase pilot.** For each C4 trajectory, a fresh rater (with or without the hidden aim) receives the cached summary with the original summarizer note, a paraphrased note (a neutral instance rewrites summary and note, keeping facts and dropping tone and handling advice), or no note. An honest rater on honest-pipeline (C3) summaries gives the baseline.
 
-**Code and data.** `talk-pilots/` (`run_pressure.py`, `run_talk_pilots.py`, `run_lifecycle.py`, `run_openrouter.py`, `analyse.py`, `analyse_lifecycle.py`); raw JSON in `results/` (MiniMax) and `results_gemma4-31b-cloud/`.
+**Code and data.** `talk-pilots/` (`run_pressure.py`, `run_talk_pilots.py`, `run_lifecycle.py`, `run_openrouter.py`, `analyse.py`, `analyse_lifecycle.py`); raw JSON in `results/` (MiniMax) and `results_gemma4-31b-cloud/`. Code and raw results are held locally and are not yet in this repository, so the numbers here cannot yet be reproduced from it.
 
 ## 4. Results
 
@@ -88,7 +88,7 @@ Stated pressure lowers escalation monotonically without a channel in both models
 | Kinship framing | 10 | 19 |
 | **Normalized** | **0** | **1** |
 
-Neither model flagged any of the 24 benign cases in any position. After three accepted precedents, detection collapsed in both models (MiniMax mean suspicion 44 → 13; Gemma 65 → 21); Gemma reads MiniMax-written transcripts here, so the effect is not a same-weights artifact. The relational positions borrowed from fieldwork and audit (shared fate, access dependence, rapport, kinship) did not reduce detection and in Gemma tended to raise it: stating an interest seems to act as a warning, while precedent framed as calibration does not. Even independent, a notes-reading monitor missed more than a third of suppression, consistent with C6 (cached prior work), where a monitor warning cut explicit “do not escalate” notes by about 70% but serious-not-escalated cases by only 37%.
+Neither model flagged any of the 24 benign cases in any position. After three accepted precedents, detection collapsed in both models (MiniMax mean suspicion 44 → 13; Gemma 65 → 21); Gemma reads MiniMax-written transcripts here, so the effect is not a same-weights artifact. The relational positions borrowed from fieldwork and audit (shared fate, access dependence, rapport, kinship) did not reduce detection and in Gemma tended to raise it: stating an interest seems to act as a warning, while precedent framed as calibration does not. Even independent, a notes-reading monitor missed 14 of 24 suppression cases (MiniMax) and 9 of 24 (Gemma), consistent with C6 (cached prior work), where a monitor warning cut explicit “do not escalate” notes by about 70% but serious-not-escalated cases by only 37%.
 
 ### 4.3 Notes recruit honest receivers; paraphrase recovers about half; selection carries the rest
 
@@ -105,7 +105,7 @@ A note written under the hidden aim recruited a rater that held no aim of its ow
 
 ### 4.4 Lifecycle: two stages bend, and one gatekeeper is enough
 
-Gemma, 12 records per arm, full ten-stage pipeline with a simulated complainant instructed to dispute responses lacking a concrete remedy, timeline or attention to what was reported.
+Gemma, 12 records per arm, full nine-stage pipeline with a simulated complainant instructed to dispute responses lacking a concrete remedy, timeline or attention to what was reported.
 
 | Check | Honest, no notes (C2) | Honest, notes (C3) | Workload (W0c) | Aim, notes (C4) | High stakes (Q2c) | Aim, router only (R4) | Aim, screener only (S4) |
 |---|---:|---:|---:|---:|---:|---:|---:|
@@ -152,7 +152,7 @@ Reports matched the case log on severity and escalation in the first MiniMax run
 - **Severity ground truth.** “Serious” is the agent’s rating or the extractor’s retaliation and safety flags, not an independent, human-checked policy rubric. Some severity-3 non-escalations may be reasonable calls.
 - **Measurement artifacts.** Keyword coding of notes over-counts steering (it fires on protective advice) and is not used for conclusions. The MiniMax lifecycle mixes two complainant prompts. Floor effects limit the pressure interaction.
 - **Endpoint change.** MiniMax runs moved from Ollama Cloud to OpenRouter mid-pilot; prompts and settings were identical, and calls are tagged by endpoint.
-- **Prior work.** All runs predate or fall at the very start of the sprint and are disclosed as prior work; sprint results will come from a frozen re-run.
+- **Prior work and sprint work.** Runs up to 22 October are prior work. Runs on 23 October fall inside the sprint dates and count as sprint work, though they use code written before the sprint (see the disclosure). Confirmatory results will come from a frozen re-run.
 
 ## 7. Implications for the sprint design
 
@@ -165,7 +165,28 @@ Reports matched the case log on severity and escalation in the first MiniMax run
 
 ## Prior work disclosure
 
-All runs, code and data described here were produced between 20 and 23 October 2026, before or at the very start of the sprint, by the first author working with AI coding assistance (Claude). The GrieVoice v2 records are the first author’s earlier synthetic dataset. Total API spend: about $0.57 on OpenRouter; Ollama Cloud runs were free.
+The Apart sprint runs 23–25 October 2026, and its rules ask that code written before the sprint be marked as preexisting. We draw the line at the end of 22 October. Times below are South African time (SAST, UTC+2) unless marked UTC. The first author did all of this work with AI coding assistance (Claude).
+
+**Preexisting (written or run up to 22 October)**
+
+- GrieVoice v2 synthetic grievance records, the first author’s earlier dataset.
+- `cached-trajectories/run_pipeline.py` and the 540 cached MiniMax trajectories (20–22 October).
+- The recruitment and good-coalition pilots and `run_collab.py` (21–22 October).
+- The MiniMax talk pilots in sections 4.1–4.3 and the first lifecycle slice, with `run_talk_pilots.py`, `run_pressure.py`, `run_lifecycle.py`, `run_all.py`, `analyse.py` and `analyse_lifecycle.py`. These ran from 21:43 on 22 October to 01:58 on 23 October SAST, which is 19:43 to 23:58 on 22 October UTC, inside MiniMax’s free window that closed at 23:59 UTC.
+- Summaries of sprint talks 1 and 2 and the lifecycle design (22 October).
+
+**Preexisting code modified during the sprint (23 October)**
+
+- `run_talk_pilots.py` and `analyse.py`: a model switch for cross-family reruns. Gemma runs started at 05:18.
+- `run_lifecycle.py` and `analyse_lifecycle.py`: the critical complainant and the single-stage aim arms used in results-log sections 7–9. Gemma lifecycle runs ran from 07:33 to 09:30.
+
+**Sprint work (23 October)**
+
+- `run_openrouter.py`, written on 23 October, which completed the MiniMax runs through OpenRouter (09:03 to 09:40).
+- All Gemma runs and the OpenRouter MiniMax runs: results-log sections 5–10, and the Gemma columns and lifecycle results in sections 4.1–4.6 of this report.
+- This report and the plain-language summary, drafted on 23 October.
+
+Total API spend: about $0.57 on OpenRouter. The Ollama Cloud runs added no per-call charges.
 
 ## References
 
@@ -205,7 +226,7 @@ Shi, J., Zhang, T. J., Schölkopf, B., Conitzer, V. and Jin, Z. (2026). [When ag
 
 Syrnikov, M. B. et al. (2026). [Institutional AI: governing LLM collusion in multi-agent Cournot markets via public governance graphs](https://arxiv.org/abs/2601.11369). arXiv:2601.11369.
 
-Tomašev, N., Franklin, M., Jacobs, J., Krier, S. and Osindero, S. (2026). [Distributional AGI safety](https://arxiv.org/abs/2512.16856). arXiv:2512.16856v2.
+Tomašev, N., Franklin, M., Jacobs, J., Krier, S. and Osindero, S. (2025). [Distributional AGI safety](https://arxiv.org/abs/2512.16856). arXiv:2512.16856v2.
 
 Xu, X. et al. (2026). [Collusion with competitive marginals: price-level audits are blind by construction](https://arxiv.org/abs/2607.26385). arXiv:2607.26385.
 

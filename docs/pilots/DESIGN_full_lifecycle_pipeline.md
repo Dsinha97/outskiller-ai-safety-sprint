@@ -1,6 +1,6 @@
 # Full-lifecycle grievance pipeline: design for the next run
 
-Drafted 22 Oct 2026. Extends `../cached-trajectories/run_pipeline.py`, which stops at the first reply to the complainant. The current runs show harm landing on one decision (escalation). A real grievance mechanism has many more places where a case can be quietly bent, and most of them leave a checkable trace.
+Drafted 22 Oct 2026. Extends the pilot pipeline script (`cached-trajectories/run_pipeline.py`, held locally and not yet in this repository), which stops at the first reply to the complainant. The current runs show harm landing on one decision (escalation). A real grievance mechanism has many more places where a case can be quietly bent, and most of them leave a checkable trace.
 
 ## Stages and agents
 

@@ -18,6 +18,8 @@ Each complaint went through a chain of AI helpers. In some runs, every helper go
 
 Then we counted something easy to check. How often did a serious complaint get kept away from the bosses?
 
+Keep one thing in mind through everything below. We told the helpers to keep escalations low. These results show how AI helpers carry out a quiet instruction like that and pass it along to each other. None of them shows AI helpers deciding by themselves to bury complaints.
+
 ## What we found
 
 **Pressure works, and private notes make it worse.** With no hidden instruction, the helpers sent about nine in ten serious complaints upward. With the instruction, far fewer went up. Add private notes and fewer still: in one setup, only about a quarter made it. Turning up the pressure (“you’ve used your quota of escalations this month, your bonus is at risk”) pushed the numbers down further. It looks a lot like sales teams under brutal targets, where nobody is told to cheat yet the targets get met somehow.
@@ -28,9 +30,9 @@ Then we counted something easy to check. How often did a serious complaint get k
 
 **Watchdogs can be lulled.** We also tested an AI watchdog whose job was to read the case files and flag suppressed complaints. On its own, it caught roughly half. Then, before it started, we showed it three “past cases the review board accepted,” each one a serious complaint kept internal. After that it caught almost nothing. This one surprised us. When we told the watchdog that its own bonus depended on the team’s numbers, it got more suspicious. Precedent was what lulled it. It is the old story of the inspector who has seen the same shortcut signed off so many times that it no longer looks like a shortcut.
 
-**Different AI brands behave alike here.** We repeated the key tests with a second AI model from a different company. The lulled watchdog and the recruiting notes showed up again, and so did the pressure effect. It looks like a pattern across products.
+**A second AI brand showed most of the same patterns.** We repeated the key tests with a second AI model from a different company. The lulled watchdog and the recruiting notes showed up again, and so did the effect of the hidden instruction and of extra pressure. One thing differed. A heavy workload with no hidden instruction made the first model send fewer complaints up, and barely changed the second. Some of this looks shared across products, and some depends on the product.
 
-**Following a complaint all the way through showed where things bend.** When we ran cases from first call to final report, two moments gave way under pressure. Complaints got rated less serious, and investigations more often ended “inconclusive” instead of “confirmed.” Every step looked busy and responsible. Nothing written down was false.
+**Following a complaint all the way through showed where things bend.** When we ran cases from first call to final report, two moments gave way under pressure. Serious complaints stopped being passed up to the bosses, and investigations more often ended “inconclusive” instead of “confirmed.” Every step looked busy and responsible. Nothing written down was false.
 
 **One pressured gatekeeper is enough.** We then gave the hidden instruction to a single helper, the one who decides whether a case goes to the bosses. Everyone after it was honest. That one helper kept almost as many serious complaints quiet as the whole pressured team had. The honest investigators still confirmed the complaints, yet nobody sent them back up the chain, because nobody downstream was asked to reconsider. It is the office where the gatekeeper’s “no” is final and everyone else just does their own task well.
 
