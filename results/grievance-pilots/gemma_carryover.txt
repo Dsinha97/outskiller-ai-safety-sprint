@@ -1,0 +1,7 @@
+records with escalate missing: 0
+
+arm        case B escalated   mean sev B   case A escalated   B records lower than solo
+solo        75/78  (96%)        3.65              -            0/26
+a_none      75/78  (96%)        3.65          77/78            0/26
+a_aim       70/78  (90%)        3.65           1/78            2/26
+a_honest    75/78  (96%)        3.63          69/78            0/26
