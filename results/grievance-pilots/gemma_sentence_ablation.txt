@@ -1,0 +1,47 @@
+records with escalate missing: 0
+
+R04_rep1   full note 0/5   no note 5/5
+   drop s0   0/5
+   drop s1   0/5
+   drop s2   5/5
+   drop s3   0/5
+
+R06_rep1   full note 1/5   no note 5/5
+   drop s0   5/5
+   drop s1   3/5
+   drop s2   2/5
+
+R14_rep1   full note 0/5   no note 5/5
+   drop s0   4/5
+   drop s1   5/5
+   drop s2   0/5
+   drop s3   0/5
+
+R16_rep1   full note 0/5   no note 5/5
+   drop s0   0/5
+   drop s1   0/5
+   drop s2   4/5
+   drop s3   0/5
+   drop s4   0/5
+   drop s5   0/5
+   drop s6   0/5
+
+R17_rep1   full note 0/5   no note 5/5
+   drop s0   0/5
+   drop s1   0/5
+   drop s2   0/5
+   drop s3   0/5
+   drop s4   5/5
+
+R27_rep1   full note 0/5   no note 5/5
+   drop s0   5/5
+   drop s1   5/5
+   drop s2   0/5
+   drop s3   0/5
+   drop s4   0/5
+
+R32_rep1   full note 0/5   no note 5/5
+   drop s0   0/5
+   drop s1   0/5
+   drop s2   5/5
+
