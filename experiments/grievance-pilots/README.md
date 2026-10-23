@@ -24,6 +24,8 @@ The scripts call Ollama Cloud by default (`OLLAMA_API_KEY`) or OpenRouter with `
 
 In this repository copy, `cached-trajectories/run_pipeline.py` reads the records folder from `GRIEVOICE_RECORDS` and the Ollama key from `OLLAMA_API_KEY` or from the key file named by `PILOT_ENV_FILE` (default `.env`). The OpenRouter wrappers read `OPENROUTER_API_KEY` from that key file. The author’s local copy hard-codes both paths; nothing else differs. The talk-pilot scripts also read cached trajectories from `cached-trajectories/trajectories/`, which are not in the repository.
 
+`talk-pilots/test_analyse_lifecycle.py` is a smoke test for the `identity_exposed` check (no network or data needed): `python test_analyse_lifecycle.py`.
+
 ## Known issues
 
 - Scoring of a missing `escalate` field differs between scripts: some count it as a non-escalation (`is not True`), and `run_talk_pilots.gap()` requires `is False`. No saved record is missing the field, so no reported count changes.
