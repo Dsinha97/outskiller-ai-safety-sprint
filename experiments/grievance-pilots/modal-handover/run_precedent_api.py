@@ -7,14 +7,18 @@ talk-pilots/analyse_precedent_arms.py reads the results unchanged. Keys never le
   PYTHONUTF8=1 modal run run_precedent_api.py --model haiku-5.5 --smoke
   PYTHONUTF8=1 modal run run_precedent_api.py --model haiku-5.5 --budget 1
   PYTHONUTF8=1 modal run run_precedent_api.py --model sonnet-5.5 --prompt-set underrated --budget 2
+  PYTHONUTF8=1 modal run run_precedent_api.py --model gemini-3.8-flash --suffix _v2 --budget 2   (new results folder)
 
-Thinking is turned off (or kept minimal) so cost stays near the no-thinking estimate; each result records what was
-actually applied (temperature, thinking) and its estimated cost.
+Thinking: Claude runs have it off (Haiku `disabled`, Sonnet `between_tools`). Gemini 3.8 Flash and 4 Argon cannot turn it
+off (lowest level is "low"), so they run at thinking_level "low". There are no fallbacks: a rejected setting raises, and a
+Claude response that contains a thinking block raises. Every result records the setting that was sent and the thinking
+tokens that came back (`thought_tokens`), so thinking can be audited per read.
 """
 from __future__ import annotations
 
 import json
 import re
+import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -22,110 +26,98 @@ from pathlib import Path
 import modal
 
 HERE = Path(__file__).parent
-TEMP, REPS, MAX_TOKENS, WORKERS, CHUNK = 0.7, 2, 2000, 6, 48  # first full runs used 600; reads cut off there were re-run at 2000
+TEMP, REPS, MAX_TOKENS, WORKERS, CHUNK = 0.7, 2, 2000, 6, 48  # the first full runs used 600; see the results note
 
-# tag: (provider, model id, $ per 1M input, $ per 1M output). List prices from the 2026-10-06 skill table and the
-# Gemini pricing page dated 2026-10-22.
+# tag: (provider, model id, $ per 1M input, $ per 1M output, thinking setting). List prices from the 2026-10-06 skill
+# table and the Gemini pricing page dated 2026-10-22.
 MODELS = {
-    "haiku-5.5": ("anthropic", "claude-haiku-5-5", 0.10, 0.50),
-    "sonnet-5.5": ("anthropic", "claude-sonnet-5-5", 2.00, 10.00),
-    "gemini-3.8-flash": ("gemini", "gemini-3.8-flash", 0.75, 3.75),
-    "gemini-4-argon": ("gemini", "gemini-4-argon", 2.00, 10.00),
+    "haiku-5.5": ("anthropic", "claude-haiku-5-5", 0.10, 0.50, {"type": "disabled"}),
+    "sonnet-5.5": ("anthropic", "claude-sonnet-5-5", 2.00, 10.00, {"type": "between_tools"}),
+    "gemini-3.8-flash": ("gemini", "gemini-3.8-flash", 0.75, 3.75, "low"),
+    "gemini-4-argon": ("gemini", "gemini-4-argon", 2.00, 10.00, "low"),
 }
 
 app = modal.App("collusion-precedent-api")
 image = modal.Image.debian_slim(python_version="3.12").pip_install("anthropic", "google-genai")
 
 
-def _call_anthropic(model, system, user, state):
+def _call_anthropic(model, system, user, thinking, state):
     import anthropic
 
     client = anthropic.Anthropic(max_retries=3)
-    thinking = {"type": "between_tools"} if "sonnet" in model else {"type": "disabled"}
-    kw = dict(model=model, max_tokens=MAX_TOKENS, system=system, messages=[{"role": "user", "content": user}])
+    # the current SDK and API no longer accept temperature, so Claude runs use the model's own sampling
     for attempt in range(4):
         try:
-            args = dict(kw, thinking=state["thinking"] if "thinking" in state else thinking)
-            # the current SDK and API no longer accept temperature, so Claude runs use the model's own sampling
-            r = client.messages.create(**args)
+            r = client.messages.create(model=model, max_tokens=MAX_TOKENS, system=system, thinking=thinking,
+                                       messages=[{"role": "user", "content": user}])
+            if any(getattr(b, "type", "") in ("thinking", "redacted_thinking") for b in r.content):
+                raise RuntimeError("response contained a thinking block although thinking was set to " + str(thinking))
             text = "".join(b.text for b in r.content if getattr(b, "type", "") == "text")
             return {"content": text, "finish": r.stop_reason, "in": r.usage.input_tokens, "out": r.usage.output_tokens,
-                    "temperature_applied": False, "thinking": str(args["thinking"])}
-        except anthropic.BadRequestError as e:
-            msg = str(e).lower()
-            if "thinking" in msg and "thinking" not in state:
-                state["thinking"] = {"type": "disabled"} if "sonnet" in model else {"type": "adaptive"}
-                continue
-            raise
+                    "thought_tokens": 0, "temperature_applied": False, "thinking": str(thinking)}
         except (anthropic.RateLimitError, anthropic.APIConnectionError, anthropic.InternalServerError):
             time.sleep(2 ** attempt * 2)
     raise RuntimeError("anthropic call failed after retries")
 
 
-def _call_gemini(model, system, user, state):
+def _call_gemini(model, system, user, level, state):
     import os
 
     from google import genai
     from google.genai import types
 
     client = genai.Client(api_key=os.environ["GEMINI_API_KEY"])
-    configs = [dict(thinking_config=types.ThinkingConfig(thinking_budget=0)),
-               dict(thinking_config=types.ThinkingConfig(thinking_level="low")), dict()]
     for attempt in range(6):
-        level = state.get("level", 0)
         try:
             cfg = types.GenerateContentConfig(system_instruction=system, max_output_tokens=MAX_TOKENS,
                                               temperature=TEMP if state.get("temperature", True) else None,
-                                              **configs[level])
+                                              thinking_config=types.ThinkingConfig(thinking_level=level))
             r = client.models.generate_content(model=model, contents=user, config=cfg)
             u = r.usage_metadata
-            out = (u.candidates_token_count or 0) + (getattr(u, "thoughts_token_count", 0) or 0)
+            thought = getattr(u, "thoughts_token_count", 0) or 0
             fr = r.candidates[0].finish_reason if r.candidates else None
-            return {"content": r.text or "", "finish": str(fr), "in": u.prompt_token_count or 0, "out": out,
-                    "temperature_applied": state.get("temperature", True), "thinking": f"gemini config {level}"}
+            return {"content": r.text or "", "finish": str(fr), "in": u.prompt_token_count or 0,
+                    "out": (u.candidates_token_count or 0) + thought, "thought_tokens": thought,
+                    "temperature_applied": state.get("temperature", True), "thinking": f"thinking_level={level}"}
         except Exception as e:  # noqa: BLE001
             msg = str(e).lower()
             if "temperature" in msg and state.get("temperature", True):
-                state["temperature"] = False
-                continue
-            if ("thinking" in msg or "budget" in msg or "level" in msg) and level < len(configs) - 1:
-                state["level"] = level + 1
+                state["temperature"] = False  # recorded per result as temperature_applied
                 continue
             if "429" in msg or "quota" in msg or "rate" in msg or "503" in msg or "unavailable" in msg:
                 time.sleep(2 ** attempt * 2)
                 continue
-            raise
+            raise  # a rejected thinking setting raises: no fallback that could switch thinking on
     raise RuntimeError("gemini call failed after retries")
 
 
 def _run(tag: str, rows: list[dict], budget_left: float):
-    provider, model, pin, pout = MODELS[tag]
+    provider, model, pin, pout, thinking = MODELS[tag]
     fn = _call_anthropic if provider == "anthropic" else _call_gemini
     state: dict = {}
     spent = [0.0]
     stop = [False]
+    lock = threading.Lock()
 
     def one(job):
         r, k = job
         if stop[0]:
             return None
         try:
-            x = fn(model, r["system"], r["user"], state)
+            x = fn(model, r["system"], r["user"], thinking, state)
         except Exception as e:  # noqa: BLE001
             return {"row": r, "rep": k, "error": f"{type(e).__name__}: {str(e)[:300]}"}
         cost = x["in"] * pin / 1e6 + x["out"] * pout / 1e6
-        spent[0] += cost
-        if spent[0] >= budget_left:
-            stop[0] = True
+        with lock:
+            spent[0] += cost
+            if spent[0] >= budget_left:
+                stop[0] = True
         return {"row": r, "rep": k, "cost": cost, **x}
 
     jobs = [(r, k) for r in rows for k in range(REPS)]
     with ThreadPoolExecutor(WORKERS) as ex:
         res = [x for x in ex.map(one, jobs) if x is not None]
     return {"results": res, "spent": spent[0], "stopped_for_budget": stop[0], "state": {k: str(v) for k, v in state.items()}}
-
-
-SECRETS = {"anthropic": "anthropic-secret", "gemini": "gemini-secret"}
 
 
 @app.function(image=image, secrets=[modal.Secret.from_name("anthropic-secret")], timeout=3600)
@@ -157,25 +149,16 @@ def _parse(text: str, finish) -> dict:
 
 
 @app.local_entrypoint()
-def main(model: str, smoke: bool = False, prompt_set: str = "precedent", budget: float = 1.0,
-         redo_truncated: bool = False):
+def main(model: str, smoke: bool = False, prompt_set: str = "precedent", budget: float = 1.0, suffix: str = ""):
     rows = [json.loads(l) for l in (HERE / f"{prompt_set}_prompts.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
     if smoke:
         rows = rows[:2] + rows[-2:]
     provider, repo = MODELS[model][0], MODELS[model][1]
     fn = run_anthropic if provider == "anthropic" else run_gemini
-    out = HERE / "results" / model / f"{prompt_set}_arms"
+    out = HERE / "results" / (model + suffix) / f"{prompt_set}_arms"
     out.mkdir(parents=True, exist_ok=True)
-    def truncated(r, k):
-        f = out / f"{r['arm']}__{r['item']}__r{k}.json"
-        return f.exists() and any(s in json.loads(f.read_text(encoding="utf-8")).get("finish", "").lower()
-                                  for s in ("max_tokens", "length"))
-
-    if redo_truncated:  # re-run only reads cut off by the output cap (rerun uses MAX_TOKENS below), overwriting them
-        todo = [r for r in rows if any(truncated(r, k) for k in range(REPS))]
-    else:
-        todo = [r for r in rows if not all((out / f"{r['arm']}__{r['item']}__r{k}.json").exists() for k in range(REPS))]
-    print(f"{model}: {len(rows)} prompts x {REPS} draws, {len(todo)} to run, budget ${budget:.2f}")
+    todo = [r for r in rows if not all((out / f"{r['arm']}__{r['item']}__r{k}.json").exists() for k in range(REPS))]
+    print(f"{model}{suffix}: {len(rows)} prompts x {REPS} draws, {len(todo)} to run, budget ${budget:.2f}")
     spent = 0.0
     errors = 0
     for i in range(0, len(todo), CHUNK):
@@ -188,13 +171,12 @@ def main(model: str, smoke: bool = False, prompt_set: str = "precedent", budget:
                 errors += 1
                 print("ERROR", r["arm"], r["item"], x["error"])
                 continue
-            if redo_truncated and not truncated(r, x["rep"]):
-                continue  # keep the original read; only cut-off reads are replaced
             p = _parse(x["content"], x["finish"])
             (out / f"{r['arm']}__{r['item']}__r{x['rep']}.json").write_text(json.dumps({
                 "arm": r["arm"], "item": r["item"], "record": r["record"], "rep": x["rep"], "label": r["label"],
                 "stratum": r["stratum"], "model": repo, "endpoint": f"{provider}-api via modal",
                 "temperature": TEMP, "temperature_applied": x["temperature_applied"], "thinking": x["thinking"],
+                "thought_tokens": x["thought_tokens"], "max_tokens": MAX_TOKENS,
                 "system_sha": r["system_sha"], "user_sha": r["user_sha"],
                 "flag": p.get("flag"), "suspicion": p.get("suspicion"), "reason": p.get("reason"),
                 "flag_missing": "flag" not in p, "finish": x["finish"], "cost_usd": round(x["cost"], 6),
@@ -204,6 +186,8 @@ def main(model: str, smoke: bool = False, prompt_set: str = "precedent", budget:
         if res["stopped_for_budget"] or spent >= budget:
             print(f"STOPPED: estimated spend ${spent:.3f} reached the ${budget:.2f} budget; rerun to resume")
             break
-    files = list(out.glob("*.json"))
-    miss = sum(json.loads(f.read_text(encoding="utf-8"))["flag_missing"] for f in files)
-    print(f"wrote {len(files)} files to {out}; missing flags {miss}; errors {errors}; estimated spend ${spent:.3f}")
+    ds = [json.loads(f.read_text(encoding="utf-8")) for f in out.glob("*.json")]
+    miss = sum(d["flag_missing"] for d in ds)
+    thinking_reads = sum(d.get("thought_tokens", 0) > 0 for d in ds)
+    print(f"wrote {len(ds)} files to {out}; missing flags {miss}; errors {errors}; reads with thinking tokens {thinking_reads}; "
+          f"estimated spend ${spent:.3f}")
