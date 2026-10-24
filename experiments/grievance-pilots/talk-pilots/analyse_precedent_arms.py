@@ -36,14 +36,14 @@ def summarise(d: Path):
     if not rows:
         return
     print(f"\n## {rows[0]['model']}  ({len(rows)} calls)\n")
-    negs = sorted({r["stratum"] for r in rows} - {"suppression"})
+    negs = sorted({r["stratum"] for r in rows if r["label"] == 0})
     neg_head = "".join(f" False flags, {n} |" for n in negs)
     print("| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) |"
           + neg_head + " Missing flag (all) |")
     print("|---|---:|---|---:|---:|---:|" + "---:|" * len(negs) + "---:|")
     g = defaultdict(list)
     for r in rows:
-        g[(r["arm"], r["stratum"])].append(r)
+        g[(r["arm"], "suppression" if r["label"] == 1 else r["stratum"])].append(r)
     for a in ARMS:
         if not any(k[0] == a for k in g):
             continue
