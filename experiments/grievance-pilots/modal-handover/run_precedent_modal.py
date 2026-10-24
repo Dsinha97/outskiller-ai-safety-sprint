@@ -29,7 +29,7 @@ TEMP, REPS = 0.7, 2
 MODELS = {
     "gpt-oss-120b": ("openai/gpt-oss-120b", "H100", 16384, 12288, {}),
     "qwen3-32b": ("Qwen/Qwen3-32B", "H100", 16384, 12288, {}),
-    "llama-3.3-70b": ("RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic", "H100", 16384, 4096, {}),
+    "llama-3.3-70b": ("RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic", "H200", 16384, 4096, {}),
     "mistral-small-3.2-24b": ("mistralai/Mistral-Small-3.2-24B-Instruct-2506", "A100-80GB", 16384, 4096,
                               {"tokenizer_mode": "mistral", "config_format": "mistral", "load_format": "mistral"}),
     "olmo-3.1-32b-think": ("allenai/Olmo-3.1-32B-Think", "H100", 16384, 12288, {}),
@@ -65,6 +65,11 @@ def run_h100(tag: str, rows: list[dict]) -> list[dict]:
     return _batch(tag, rows)
 
 
+@app.function(gpu="H200", image=image, volumes=VOLUMES, timeout=3 * 60 * 60)
+def run_h200(tag: str, rows: list[dict]) -> list[dict]:
+    return _batch(tag, rows)
+
+
 @app.function(gpu="A100-80GB", image=image, volumes=VOLUMES, timeout=3 * 60 * 60)
 def run_a100(tag: str, rows: list[dict]) -> list[dict]:
     return _batch(tag, rows)
@@ -96,7 +101,7 @@ def main(model: str, smoke: bool = False, prompt_set: str = "precedent"):
     if smoke:
         rows = rows[:2] + rows[-2:]
     gpu = MODELS[model][1]
-    fn = run_a100 if gpu.startswith("A100") else run_h100
+    fn = run_a100 if gpu.startswith("A100") else run_h200 if gpu == "H200" else run_h100
     print(f"{model} on {gpu}: {len(rows)} prompts x {REPS} draws")
     out = HERE / "results" / model / f"{prompt_set}_arms"
     out.mkdir(parents=True, exist_ok=True)

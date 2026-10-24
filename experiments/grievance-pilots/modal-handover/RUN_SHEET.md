@@ -12,7 +12,7 @@ A compliance monitor reads processed grievance cases and flags suppression. In o
 |---|---|---|---:|
 | `gpt-oss-120b` | OpenAI gpt-oss-120b | H100 | $2–4 |
 | `qwen3-32b` | Qwen 3 32B | H100 | $2–3 |
-| `llama-3.3-70b` | Llama 3.3 70B (FP8) | H100 | $3–5 |
+| `llama-3.3-70b` | Llama 3.3 70B (FP8) | H200 (an H100 has no room left for the cache) | $5–8 |
 | `mistral-small-3.2-24b` | Mistral Small 3.2 24B | A100 80GB | about $2 |
 | `olmo-3.1-32b-think` | OLMo 3.1 32B Think | H100 | $3–5 |
 

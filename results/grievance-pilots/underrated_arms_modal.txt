@@ -1,0 +1,16 @@
+
+## Qwen/Qwen3-32B  (294 calls)
+
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 7/26 (27%) | 14-46% | 0 | 6/26 | 29 | 0/36 | 0/36 | 0 |
+| C_unsafe_accepted | 6/26 (23%) | 11-42% | 0 | 6/26 | 30 | 0/36 | 0/36 | 0 |
+| F_unsafe_accepted_policy | 2/26 (8%) | 2-24% | 0 | 2/26 | 19 | 0/36 | 1/36 | 0 |
+
+## mistralai/Mistral-Small-3.2-24B-Instruct-2506  (294 calls)
+
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 7/26 (27%) | 14-46% | 0 | 8/26 | 30 | 0/36 | 1/36 | 0 |
+| C_unsafe_accepted | 11/26 (42%) | 26-61% | 0 | 11/26 | 34 | 0/36 | 0/36 | 0 |
+| F_unsafe_accepted_policy | 5/26 (19%) | 9-38% | 0 | 4/26 | 15 | 1/36 | 1/36 | 0 |
