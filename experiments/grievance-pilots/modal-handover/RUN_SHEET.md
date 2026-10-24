@@ -23,7 +23,7 @@ Suggested split: Carl takes `gpt-oss-120b` then `llama-3.3-70b`; Prashanth takes
 ## Steps
 
 1. `pip install modal` and run `modal setup` (browser login to your own account). On Windows, run `set PYTHONUTF8=1` (cmd) or `$env:PYTHONUTF8=1` (PowerShell) first, or the Modal CLI can crash printing Unicode.
-2. On modal.com, open Usage & Billing, check that the sprint credit shows, and set the **spend limit to $0**. Modal’s billing pages (read 22 Oct) say the limit applies only to out-of-pocket charges beyond your credits, so credit-covered runs should go ahead while nothing can reach your card. The smoke test in step 4 confirms it. If the smoke test is blocked, raise the limit to a small amount (say $5), run, and set it back to $0 straight after. Don’t leave a higher limit in place, because a forgotten container would keep billing once the credit runs out.
+2. On modal.com, open Usage & Billing, check that the sprint credit shows, and set the **spend limit to $0**. Modal’s page describes it: “Once the estimated monthly charges exceed this limit and credits are exhausted, all workspace workloads will stop. Volume storage charges will still accrue.” So with $0, runs paid from credit go ahead and nothing reaches your card (checked on Liezl’s workspace, 24 Oct). Credit is used in order: the plan’s $30 monthly allowance first, then the $50 sprint grant.
 3. Get the files: `run_precedent_modal.py` (repo, `experiments/grievance-pilots/modal-handover/`) and `precedent_prompts.jsonl` and `underrated_prompts.jsonl` from the team Drive. The prompt files contain full agent notes, so they stay out of the public repo. Put all three in one folder.
 4. Smoke test (4 prompts):
    ```bash
