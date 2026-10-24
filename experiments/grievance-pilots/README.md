@@ -17,6 +17,9 @@ The sprint runs 23–25 October 2026. Preexisting means written or run before th
 | `talk-pilots/run_carryover.py`, `analyse_carryover.py` | Sprint work (23 Oct): does a note change the next case |
 | `talk-pilots/analyse_motive.py` | Sprint work (23 Oct): regex labels for note style (motive, verdict, neither) |
 | `talk-pilots/run_monitor_gemma_notes.py`, `run_monitor_minimax_notes.py`, `analyse_monitor_gemma_notes.py`, `analyse_monitor_cross.py` | Sprint work (23 Oct): independent monitor across model families |
+| `talk-pilots/run_precedent_arms.py`, `run_underrated_arms.py`, `analyse_precedent_arms.py` | Sprint work (24 Oct): six calibration arms separating precedent, endorsement and policy priority, and a harder under-rated set; results in `docs/pilots/RESULTS_precedent_arms_2026-10-24.md` |
+| `talk-pilots/export_precedent_prompts.py` | Sprint work (24 Oct): freezes the monitor prompts into JSONL for the Modal runs |
+| `modal-handover/run_precedent_modal.py`, `RUN_SHEET.md` | Sprint work (24 Oct): vLLM batch runner for open-weight monitors on Modal and the teammate run sheet |
 
 ## Running
 
@@ -36,4 +39,6 @@ In this repository copy, `cached-trajectories/run_pipeline.py` reads the records
 - The Gemma-written and MiniMax-written monitor sets define suppression differently (see report section 4.2).
 - Provider and model switching is uneven: `PILOT_PROVIDER` works only in `run_monitor_*` scripts and `run_openrouter.py`, and `run_pressure.py` keeps its own defaults. Gemma’s C3/C4/C5 pressure baselines came from a separate invocation that is not scripted here. A sprint re-run should centralize configuration and record the exact command for each table.
 - Resumability skips any existing result file, so a prompt or case-set change can silently keep stale results; `run_openrouter.py` archives reports under a fixed suffix. Use configuration-specific output folders for re-runs.
+- The frozen prompt files for the Modal runs (`modal-handover/*_prompts.jsonl`) hold full agent summaries and notes, so they are shared through the team Drive and ignored here. Real place and company names in them were replaced with invented ones by a local scrub script (kept out of the repo because it lists the real names), so Modal runs see slightly different user text from the OpenRouter monitor runs.
+- In `run_precedent_arms.py`, the first launch also ran honest C2 cases with no notes stage; `analyse_precedent_arms.py` drops them, and C1 attempts failed by design.
 - The glass-channel arm (G4 in `run_lifecycle.py`) appends “the lender reads every note” to channel text that says the lender never sees notes, so G4 results come from conflicting instructions.

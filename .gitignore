@@ -13,3 +13,7 @@ Thumbs.db
 # large raw run dumps; commit summaries instead
 results/raw/
 *.parquet
+# frozen monitor prompts hold full agent notes; shared via the team Drive
+experiments/grievance-pilots/modal-handover/*_prompts.jsonl
+experiments/grievance-pilots/modal-handover/results/
+experiments/grievance-pilots/modal-handover/scrub.py
