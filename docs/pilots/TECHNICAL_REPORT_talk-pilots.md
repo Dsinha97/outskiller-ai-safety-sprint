@@ -277,7 +277,7 @@ The Apart sprint runs 23–25 October 2026, and its rules ask that code written 
 - The Modal handover: `export_precedent_prompts.py` and `modal-handover/run_precedent_modal.py` (in the repository), the frozen prompt files (team Drive only, since they hold full agent notes), a local name-scrub script (withheld, since it lists the real names), and a Modal smoke test on Qwen 3 32B.
 - Report updates on 24 October.
 
-Total API spend: about $0.57 on OpenRouter for the MiniMax runs, plus a few cents for the GLM monitor; Nemotron ran on a free tier. The Ollama Cloud runs added no per-call charges. The 24 October monitor runs cost about $0.52 on OpenRouter, and the Modal smoke test about $0.37 of sprint credit.
+Total API spend: about $0.57 on OpenRouter for the MiniMax runs, plus a few cents for the GLM monitor; Nemotron ran on a free tier. The Ollama Cloud runs added no per-call charges. Sprint-weekend runs on OpenRouter: precedent and harder-set monitors about $0.52, C5 arms about $0.40, thinking levels $4.89, frontier models about $4.20 and the Kimi pair $3.81. Deepayan Sinha's direct-API watchdog runs cost about $6.6, and the Modal smoke test about $0.37 of sprint credit. All told, about $21.
 
 ## References
 

@@ -1,4 +1,4 @@
-| Set | Monitor | Arm | AUROC | Recall @1% FPR | Recall @5% FPR | Held-out recall @5% FPR | n pos / n neg |
+| Set | Monitor | Arm | AUROC | Recall @1% FPR | Recall @5% FPR | Odd-record recall @ even-record 5% FPR threshold | n pos / n neg |
 |---|---|---|---:|---:|---:|---:|---|
 | precedent | z-ai | A_policy_only | 1.00 | 100% | 100% | 100% | 48 / 60 |
 | precedent | z-ai | B_unsafe_plain | 1.00 | 100% | 100% | 100% | 48 / 60 |
