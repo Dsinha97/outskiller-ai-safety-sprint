@@ -8,43 +8,45 @@ A compliance monitor reads processed grievance cases and flags suppression. In o
 
 ## Pick one model (each is one GPU, one batch)
 
-| Tag | Model | GPU | Est. cost |
+| Tag | Model | GPU | Rough cost |
 |---|---|---|---:|
-| `gpt-oss-120b` | OpenAI gpt-oss-120b | H100 | about $2–4 |
-| `qwen3-32b` | Qwen 3 32B | H100 | about $2–3 |
-| `llama-3.3-70b` | Llama 3.3 70B (FP8) | H100 | about $3–5 |
+| `gpt-oss-120b` | OpenAI gpt-oss-120b | H100 | $2–4 |
+| `qwen3-32b` | Qwen 3 32B | H100 | $2–3 |
+| `llama-3.3-70b` | Llama 3.3 70B (FP8) | H100 | $3–5 |
 | `mistral-small-3.2-24b` | Mistral Small 3.2 24B | A100 80GB | about $2 |
-| `olmo-3.1-32b-think` | OLMo 3.1 32B Think | H100 | about $3–5 |
+| `olmo-3.1-32b-think` | OLMo 3.1 32B Think | H100 | $3–5 |
 
-Suggested split: Carl takes `gpt-oss-120b` then `llama-3.3-70b`; Prashanth takes `qwen3-32b` then `mistral-small-3.2-24b`. Most of the cost is the first download and start-up (10–20 minutes). The 648 calls themselves take minutes.
+The costs are rough estimates, scaled from one smoke test: Qwen 3 32B on an H100 cost about $0.37 for start-up plus 8 calls. Only Qwen 3 32B has been tested on Modal so far, so smoke-test any other model before its full run. Reasoning models (gpt-oss, Qwen, OLMo Think) write long answers and may cost more.
+
+Suggested split: Carl takes `gpt-oss-120b` then `llama-3.3-70b`; Prashanth takes `qwen3-32b` then `mistral-small-3.2-24b`. Most of the cost is the first download and start-up (10–20 minutes). The calls themselves take minutes.
 
 ## Steps
 
-1. `pip install modal` and run `modal setup` (browser login to your own account).
-2. On modal.com, Usage & Billing: set the **spend limit to $0**, so nothing can charge your card.
-3. Get the files: `run_precedent_modal.py` from this folder of the repo, and `precedent_prompts.jsonl` and `underrated_prompts.jsonl` from the team Drive (they contain full agent notes, so they are kept out of the public repo). Put all three in one folder.
+1. `pip install modal` and run `modal setup` (browser login to your own account). On Windows, run `set PYTHONUTF8=1` (cmd) or `$env:PYTHONUTF8=1` (PowerShell) first, or the Modal CLI can crash printing Unicode.
+2. On modal.com, open Usage & Billing and check that the sprint credit shows. A spend limit protects your card, but we haven't confirmed that a $0 limit still lets credit-covered runs go ahead. If you set one, the smoke test in step 4 will show whether runs are blocked.
+3. Get the files: `run_precedent_modal.py` (repo, `experiments/grievance-pilots/modal-handover/`) and `precedent_prompts.jsonl` and `underrated_prompts.jsonl` from the team Drive. The prompt files contain full agent notes, so they stay out of the public repo. Put all three in one folder.
 4. Smoke test (4 prompts):
    ```bash
-   PYTHONUTF8=1 modal run run_precedent_modal.py --model qwen3-32b --smoke
+   modal run run_precedent_modal.py --model qwen3-32b --smoke
    ```
    Check that `results/qwen3-32b/precedent_arms/` has 8 files and that their `flag` fields are `true` or `false`, not `null`.
 5. Full run:
    ```bash
-   PYTHONUTF8=1 modal run run_precedent_modal.py --model qwen3-32b
+   modal run run_precedent_modal.py --model qwen3-32b
    ```
    Then the harder set (147 prompts, where the rating hides the violation), in the same session:
    ```bash
-   PYTHONUTF8=1 modal run run_precedent_modal.py --model qwen3-32b --set underrated
+   modal run run_precedent_modal.py --model qwen3-32b --prompt-set underrated
    ```
 6. Confirm nothing is left running: `modal app list` and `modal container list`. Stop anything with `modal app stop collusion-precedent-arms`.
-7. Zip `results/<tag>/` and drop it in the Drive folder, or open a PR to `results/precedent-arms/`. Note your spend from `modal billing summary` or the dashboard.
+7. Zip `results/<tag>/` and put it in the team Drive. Please don't commit these result files to the repo: each one quotes the case text. Note your spend from the Modal dashboard. The analysis tables made from your results go into the repo afterwards.
 
 ## If something breaks
 
 - Out of memory at start-up: lower `max_model_len` in `MODELS` to 8192 and rerun.
-- Many `flag: null` results: the model wrapped its JSON in reasoning. Send the folder anyway; the raw text is saved and can be re-parsed.
+- Some results with `flag_missing: true`: the answer was cut off at the token limit or never left its reasoning, so it isn't scored. A few are fine; if more than about one in ten are missing, tell us before running more.
 - Anything else: paste the last 30 lines of output in the WhatsApp group.
 
 ## What not to change
 
-Keep the prompts file, temperature (0.7) and two draws per prompt as they are, so results compare with the OpenRouter monitors.
+Keep the prompt files, temperature (0.7) and two draws per prompt as they are, so results compare with the OpenRouter monitors.

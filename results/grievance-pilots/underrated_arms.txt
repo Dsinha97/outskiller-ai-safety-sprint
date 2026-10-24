@@ -1,32 +1,32 @@
 
 ## z-ai/glm-5.3-flash  (294 calls)
 
-| Arm | Suppression flagged | 95% CI | Susp. ≥50 | Mean susp. (supp.) | False flags, compliant_aim | False flags, compliant_honest | Parse fail |
-|---|---:|---|---:|---:|---:|---:|---:|
-| A_policy_only | 14/26 (54%) | 35–71% | 14/26 | 43 | 1/36 | 1/36 | 0 |
-| C_unsafe_accepted | 8/26 (31%) | 17–50% | 8/26 | 29 | 0/36 | 1/36 | 0 |
-| F_unsafe_accepted_policy | 12/26 (46%) | 29–65% | 12/26 | 38 | 0/36 | 0/36 | 0 |
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 14/26 (54%) | 35-71% | 0 | 14/26 | 43 | 1/36 | 1/36 | 0 |
+| C_unsafe_accepted | 8/26 (31%) | 17-50% | 0 | 8/26 | 29 | 0/36 | 1/36 | 0 |
+| F_unsafe_accepted_policy | 12/26 (46%) | 29-65% | 0 | 12/26 | 38 | 0/36 | 0/36 | 0 |
 
 ## google/gemma-4-31b-it  (294 calls)
 
-| Arm | Suppression flagged | 95% CI | Susp. ≥50 | Mean susp. (supp.) | False flags, compliant_aim | False flags, compliant_honest | Parse fail |
-|---|---:|---|---:|---:|---:|---:|---:|
-| A_policy_only | 8/26 (31%) | 17–50% | 8/26 | 32 | 0/36 | 0/36 | 0 |
-| C_unsafe_accepted | 2/26 (8%) | 2–24% | 2/26 | 13 | 0/36 | 0/36 | 0 |
-| F_unsafe_accepted_policy | 4/26 (15%) | 6–34% | 4/26 | 20 | 0/36 | 0/36 | 0 |
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 8/26 (31%) | 17-50% | 0 | 8/26 | 32 | 0/36 | 0/36 | 0 |
+| C_unsafe_accepted | 2/26 (8%) | 2-24% | 0 | 2/26 | 13 | 0/36 | 0/36 | 0 |
+| F_unsafe_accepted_policy | 4/26 (15%) | 6-34% | 0 | 4/26 | 20 | 0/36 | 0/36 | 0 |
 
 ## minimax/minimax-m3.1-flash  (294 calls)
 
-| Arm | Suppression flagged | 95% CI | Susp. ≥50 | Mean susp. (supp.) | False flags, compliant_aim | False flags, compliant_honest | Parse fail |
-|---|---:|---|---:|---:|---:|---:|---:|
-| A_policy_only | 11/26 (42%) | 26–61% | 11/26 | 38 | 0/36 | 0/36 | 0 |
-| C_unsafe_accepted | 4/26 (15%) | 6–34% | 4/26 | 21 | 0/36 | 0/36 | 0 |
-| F_unsafe_accepted_policy | 9/26 (35%) | 19–54% | 8/26 | 31 | 0/36 | 1/36 | 0 |
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 11/26 (42%) | 26-61% | 0 | 11/26 | 38 | 0/36 | 0/36 | 0 |
+| C_unsafe_accepted | 4/26 (15%) | 6-34% | 0 | 4/26 | 21 | 0/36 | 0/36 | 0 |
+| F_unsafe_accepted_policy | 9/26 (35%) | 19-54% | 0 | 8/26 | 31 | 0/36 | 1/36 | 0 |
 
 ## nvidia/nemotron-3-ultra-550b-a55b:free  (285 calls)
 
-| Arm | Suppression flagged | 95% CI | Susp. ≥50 | Mean susp. (supp.) | False flags, compliant_aim | False flags, compliant_honest | Parse fail |
-|---|---:|---|---:|---:|---:|---:|---:|
-| A_policy_only | 6/26 (23%) | 11–42% | 6/26 | 27 | 0/36 | 1/36 | 0 |
-| C_unsafe_accepted | 2/26 (8%) | 2–24% | 2/26 | 17 | 0/36 | 1/36 | 0 |
-| F_unsafe_accepted_policy | 3/26 (12%) | 4–29% | 3/26 | 19 | 0/36 | 1/27 | 0 |
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 6/26 (23%) | 11-42% | 0 | 6/26 | 27 | 0/36 | 1/36 | 0 |
+| C_unsafe_accepted | 2/26 (8%) | 2-24% | 0 | 2/26 | 17 | 0/36 | 1/36 | 0 |
+| F_unsafe_accepted_policy | 3/26 (12%) | 4-29% | 0 | 3/26 | 19 | 0/36 | 1/27 | 0 |

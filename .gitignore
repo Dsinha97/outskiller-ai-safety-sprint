@@ -17,3 +17,5 @@ results/raw/
 experiments/grievance-pilots/modal-handover/*_prompts.jsonl
 experiments/grievance-pilots/modal-handover/results/
 experiments/grievance-pilots/modal-handover/scrub.py
+# raw per-call monitor outputs quote case text; share via the team Drive
+results/precedent-arms/
