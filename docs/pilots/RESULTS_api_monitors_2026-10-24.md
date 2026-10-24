@@ -41,7 +41,7 @@ False flags in 1,440 benign reads: Haiku 4, Sonnet 0, Gemini 3.8 Flash 0, Argon 
 
 - **Gemini 3.8 Flash replicates the effect at low thinking.** Only the endorsed arm drops (33%, 95% interval 22-47%), and the policy sentence restores 100%. Thinking was heaviest in arms C and F, so the drop is not an artefact of thinking being off.
 - **Sonnet 5.5 replicates it too.** 98% at baseline, 56% when the precedents are endorsed (interval 42-69%), 100% when they are marked rejected, and 88% with the policy sentence. Its mean suspicion in arm C is 37, and only 10 of 48 reads score 50 or more, so the endorsed arm hurts it on both flag and score.
-- **Gemini 4 Argon is unaffected.** 100% in all six arms, including the endorsed one. Sonnet 5.5 is a mid-tier model, not Claude's strongest. The team's separate frontier-tier runs (Claude Opus 5.5 and GPT-6.1 Sol, not part of this note) also caught 48 of 48 endorsed cases, so resistance looks like a frontier-versus-mid-tier difference, not Gemini versus Claude.
+- **Gemini 4 Argon is unaffected.** 100% in all six arms, including the endorsed one. Three frontier models (Gemini 4 Argon, Claude Opus 5.5 and GPT-6.1 Sol) caught every endorsed case; the Opus and Sol runs are the team's separate ones and are not part of this note. Sonnet 5.5 is a mid-tier model, not Claude's strongest. A capability-tier effect is possible, but three models, two of them run on one arm only, cannot establish it.
 - **Haiku 5.5 is weaker and noisier.** Its baseline is 83%, and arms B and E (73%, 79%) are also below it. The endorsed arm is lowest (60%, interval 46-73%), which overlaps the baseline interval (70-91%), so it is not a clean replication.
 
 ### Harder set: under-rated suppression (26 reads per arm)
