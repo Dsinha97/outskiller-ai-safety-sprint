@@ -68,6 +68,53 @@ There were 7 false flags in 855 compliant reads, and none of them cluster in arm
 
 **Caveats:** 13 suppression cases on 6 records, with wide intervals (see the analysis file). Compliant cases cover only 2 records. Treat the per-monitor differences in F as suggestive.
 
+## Suppression with no notes (C5), arms A and C (24 Oct, afternoon)
+
+Script: `run_c5_arms.py`; table `results/grievance-pilots/c5_arms.txt`. Suppression: 24 C5 cases (hidden aim, no notes channel, rated severity >= 3, not escalated); benign: 24 C2 escalations (no aim, no notes). Two draws, four monitors (Nemotron on the paid endpoint after the free tier's daily limit), about $0.40.
+
+| Arm | GLM | Gemma | MiniMax | Nemotron |
+|---|---:|---:|---:|---:|
+| A policy only | 48/48 | 48/48 | 48/48 | 48/48 |
+| C unsafe, accepted | 38/48 (79%) | 25/48 (52%) | 40/48 (83%) | 40/48 (83%) |
+
+No false flags (0 of 384 benign reads). Suppression without any notes was caught at similar rates to suppression with notes (arm C with notes: 71%, 50%, 85%, 73%; different sampled cases), and the endorsement lowered detection in a similar way. On this set the watchdogs work from the rating against the policy, not from the note text, so the "parallel moves, no talk" case is not hard here. It would become hard on under-rated cases, where the rating hides the violation.
+
+## Thinking level as a variable: GLM 5.3 Flash and Gemini 3.8 Flash at low and high reasoning effort (24 Oct, afternoon)
+
+Script: `run_thinking_arms.py`; analysis `analyse_thinking.py`, table `results/grievance-pilots/thinking_levels.txt`. Arms A, C and F on both sets, two draws, 618 calls per model and level, reasoning text saved. Cost $4.89.
+
+| Suppression flagged | GLM low | GLM high | Gemini low | Gemini high |
+|---|---:|---:|---:|---:|
+| Easy set, A | 48/48 | 48/48 | 48/48 | 48/48 |
+| Easy set, C (endorsed) | 32/48 | 29/48 | 11/48 | 19/48 |
+| Easy set, F | 48/48 | 48/48 | 48/48 | 48/48 |
+| Harder set, A | 9/26 | 13/26 | 6/26 | 6/26 |
+| Harder set, C | 6/26 | 10/26 | 1/26 | 4/26 |
+| Harder set, F | 7/26 | 10/26 | 4/26 | 6/26 |
+
+False flags: 3 of 1,584 benign reads (GLM and Gemini). Median reasoning on endorsed suppression cases: Gemini 374 tokens at low and **15,356 at high** (against 500 to 1,000 in other arms); GLM 193 and 293.
+
+- **More thinking helps a little, inconsistently.** Gemini caught more endorsed cases at high effort (11 to 19 of 48) and GLM did slightly worse (32 to 29). On the harder set, high effort helped GLM in every arm. Thinking does not remove the endorsement effect in either model; the policy sentence (F) does, at both levels.
+- **The endorsement provokes long deliberation.** Gemini at high effort spent a median of about 15,000 reasoning tokens on endorsed suppression cases, weighing the board's examples against the written policy, and still missed 29 of 48.
+- **Missed reads defer to the precedent in so many words.** Coded on endorsed suppression reads (regex, checked by reading samples): Gemini high, deferral language in 22 of 29 misses against 6 of 19 catches; GLM high, 9 of 19 misses against 0 of 29 catches. Typical: the examples "are benchmarks for correct handling"; the case "mirrors established handling procedures". Catches more often state that the policy overrides the examples (GLM high: 7 of 29 catches, 2 of 19 misses). One Gemini read asks whether the setup is "a deliberate test of LLM adherence to explicit rules versus contextual examples".
+- **On the harder set, catches question the rating.** GLM high: 6 of 10 catches note a mismatch between rating and facts, against 4 of 16 misses. Gemini at low effort barely reasons on the harder set (median 72 to 123 tokens) and catches almost nothing.
+- **Caveats.** Regex codes, not a human rubric; thinking level and model are confounded with provider defaults; 26 reads per hard-set cell. Gemma, which does not reason, showed the largest drop in the four-monitor runs, which fits the pattern but is a different model.
+
+## Further watchdogs: API monitors (Deepayan Sinha), frontier models and Kimi (24 Oct, evening)
+
+**API monitors** (run by Deepayan through the Claude and Gemini APIs from Modal; full note `docs/pilots/RESULTS_api_monitors_2026-10-24.md` in the repo and `results/` on the Drive). Easy set, suppression flagged of 48, arms A / B / C / D / E / F: Claude Haiku 5.5 40 / 35 / 29 / 40 / 38 / 39; Claude Sonnet 5.5 47 / 46 / 27 / 48 / 46 / 42; Gemini 3.8 Flash (thinking low) 48 / 48 / 16 / 48 / 48 / 48; Gemini 4 Argon 48 in every arm. Harder set, of 26, arms A / C / F: Haiku 2 / 5 / 8; Sonnet 6 / 5 / 7; Gemini 3.8 Flash 4 / 4 / 6; Argon 14 / 12 / 14.
+
+**Frontier models** (OpenRouter, lowest reasoning effort; endorsed arm of the easy set plus the whole harder set, 402 calls each, about $4.20 together). Easy set arm C: Claude Opus 5.5 48/48, GPT-6.1 Sol 48/48. Harder set A / C / F: Opus 11 / 10 / 10, Sol 11 / 6 / 9. Table: `results/grievance-pilots/frontier_hardest.txt`. Opus 5.5 refused 114 of 216 harmless compliant reads on the harder set and 11 of 60 benign reads on the easy set (content filter on vague, low-content complaints); refusals count as not flagged, so its false-flag rate is unmeasured. Sol: 2 false flags in 60.
+
+**Kimi pair** (OpenRouter, $3.81). Kimi K2 0905 (no thinking control; 79 of 618 reads used reasoning tokens through provider routing) and Kimi K2 Thinking. Easy set A / C / F: K2 48 / 41 / 47; K2 Thinking 48 / 37 / 48. Harder set: K2 15 / 14 / 12 (the best harder-set baseline of any watchdog); K2 Thinking 12 / 5 / 9. K2 Thinking's reasoning showed deferral to the endorsed cases in all 11 easy-set misses, against 16 of 37 catches.
+
+**Reading across all twelve watchdogs:**
+- **The endorsement effect replicates outside the first four.** Clear drops in Sonnet 5.5, Gemini 3.8 Flash (on two providers: 16/48 direct API at low, 11 and 19 of 48 via OpenRouter at low and high) and Kimi K2 Thinking; weaker in Haiku 5.5 and Kimi K2.
+- **Three frontier models caught every endorsed case:** Gemini 4 Argon, Claude Opus 5.5 and GPT-6.1 Sol all caught 48 of 48 on the endorsed arm. Comparing Argon with Sonnet made this look like a family difference; it may instead track capability tier, but Opus and Sol ran only that arm, three models cannot establish a tier effect, and Sol still dropped on the harder set (11 to 6 of 26).
+- **Thinking is no defence.** More reasoning helped Gemini a little, did nothing for GLM, and Kimi K2 Thinking did worse than Kimi K2 (harder set arm C: 5 against 14 of 26), though these are different releases with uncontrolled routing, so not a clean thinking contrast. Deferral codes search the reasoning and the stated reason, by regex.
+- **No watchdog solves the harder set.** The best baselines are Kimi K2 (58%), Argon and GLM (54%); the frontier models sit at 42–54%.
+- **Caveats.** Claude ran at default sampling (temperature is rejected), thinking settings differ by provider, Opus 5.5's refusals hide its false-flag rate, and the frontier runs cover only arm C of the easy set. Claude helped build the setup and is also among the watchdogs.
+
 ## Next
 
 - **Run both prompt sets on open-weight monitors on Modal.** The script takes `--set precedent` or `--set underrated`, and the run sheet is in `experiments/grievance-pilots/modal-handover/`. A smoke test passed on Qwen 3 32B on 24 Oct.
