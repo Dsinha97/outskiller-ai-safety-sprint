@@ -55,4 +55,6 @@ Most starter routes are API-only and run on a laptop. Use Modal for fanning out 
 
 ## Report
 
-PDF on the official Apart template, at most 8 pages plus references and appendices, a 150-250 word abstract, a **Limitations and Dual-Use / Ethical Considerations** appendix, and an LLM usage statement (`docs/LLM_USAGE.md`).
+The submitted report is [`docs/report/Quiet-Suppression-report.pdf`](docs/report/Quiet-Suppression-report.pdf).
+
+It follows the sprint's format: PDF on the official Apart template, at most 8 pages plus references and appendices, a 150-250 word abstract, a **Limitations and Dual-Use / Ethical Considerations** appendix, and an LLM usage statement (`docs/LLM_USAGE.md`).
