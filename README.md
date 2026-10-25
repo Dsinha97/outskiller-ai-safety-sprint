@@ -2,7 +2,7 @@
 
 Code, configs and logged results for our team's entry in the [Apart Research AI Collusion Research Sprint](https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25) (Oct 23-25, 2026). Submissions close Sun Oct 25, 11:59 PM AoE.
 
-Nothing here is a result yet. The research question, harness and hypotheses are decided in the team's shared doc and recorded in `docs/DECISIONS.md`.
+This repository holds the code, summary tables and report for our submission, [`docs/report/Quiet-Suppression-report.pdf`](docs/report/Quiet-Suppression-report.pdf). The research question, harness and hypotheses are recorded in `docs/DECISIONS.md`. Code written before the sprint (before the end of 22 October UTC) is marked as preexisting in [`experiments/grievance-pilots/README.md`](experiments/grievance-pilots/README.md) and listed in [`docs/PRIOR_WORK.md`](docs/PRIOR_WORK.md).
 
 ## Layout
 
