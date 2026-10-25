@@ -15,3 +15,25 @@ Sprint work. Second sample of two open-weight watchdogs at vLLM engine seed 1, o
 | `mistral-small-3.2-24b` | A100-80GB | 648 files | 294 files | 0 |
 
 Checks: every file has `"seed": 1`; in the smoke tests the two draws of each prompt differed; no app or container was left running afterwards. Output folders: `results/<tag>_seed1/<set>_arms/`. Not yet checked: `system_sha`/`user_sha` against the seed 0 runs (to be done in the cross-model analysis).
+
+## Flag tallies (seed 1)
+
+Suppression cases flagged, by arm (flag true, not `flag_missing`). Six-arm set has 48 per arm, harder set 26 per arm.
+
+| Model | Six-arm A / C / F (of 48) | Harder set A / C / F (of 26) |
+|---|---|---|
+| `qwen3-32b` | 47 / 45 / 42 | 13 / 6 / 3 |
+| `mistral-small-3.2-24b` | 42 / 18 / 21 | 8 / 11 / 7 |
+
+False flags on benign (six-arm set, 60 per arm) and compliant (harder set, 72 per arm) cases, arms A / C / F:
+
+| Model | Six-arm A / C / F | Harder set A / C / F |
+|---|---|---|
+| `qwen3-32b` | 0 / 1 / 0 | 0 / 1 / 0 |
+| `mistral-small-3.2-24b` | 1 / 1 / 0 | 3 / 2 / 0 |
+
+Arms B, D and E (six-arm set) are in the result files and not tabulated here.
+
+## Spend
+
+About $2.40 (Modal Usage page, Oct 1-31 cycle; $2.43 in the hourly billing report for 25 Oct), all paid from credit, nothing charged to the card. Smoke tests: $0.28 (Qwen) and $0.33 (Mistral). About $1.81 for the four full runs together; the report does not split them by model.
