@@ -7,6 +7,11 @@ talk-pilots/analyse_precedent_arms.py reads. The container stops when the job en
   PYTHONUTF8=1 modal run run_precedent_modal.py --model gpt-oss-120b
   PYTHONUTF8=1 modal run run_precedent_modal.py --model qwen3-32b --smoke
   PYTHONUTF8=1 modal run run_precedent_modal.py --model qwen3-32b --prompt-set underrated   (147 harder prompts)
+  PYTHONUTF8=1 modal run run_precedent_modal.py --model qwen3-32b --seed 1   (a repeat sample)
+
+Seeds: vLLM's engine seed defaults to 0, so runs without --seed reuse the same random stream and
+reproduce earlier draws. --seed N (N other than 0) passes LLM(seed=N), writes to
+results/<model-tag>_seed<N>/ and records "seed" in each file, so earlier folders are never overwritten.
 
 Models (one GPU each): see MODELS below. Same temperature (0.7) and two draws per prompt as the
 OpenRouter runs. A call that stops at the token limit, or ends inside an unclosed <think> block,
@@ -25,7 +30,7 @@ TEMP, REPS = 0.7, 2
 
 # tag: (Hugging Face repo, GPU, max_model_len, max_tokens, extra LLM kwargs)
 # Reasoning models get a larger output budget so they can finish thinking; prompts are about 1-3k tokens.
-# Only Qwen 3 32B has been smoke-tested on Modal (24 Oct); smoke-test every other model before a full run.
+# All five models completed both prompt sets (24 Oct); smoke-test any new configuration before a full run.
 MODELS = {
     "gpt-oss-120b": ("openai/gpt-oss-120b", "H100", 16384, 12288, {}),
     "qwen3-32b": ("Qwen/Qwen3-32B", "H100", 16384, 12288, {}),
@@ -44,11 +49,11 @@ hf_cache = modal.Volume.from_name("hf-cache", create_if_missing=True)
 VOLUMES = {"/root/.cache/huggingface": hf_cache}
 
 
-def _batch(tag: str, rows: list[dict]) -> list[dict]:
+def _batch(tag: str, rows: list[dict], seed: int = 0) -> list[dict]:
     from vllm import LLM, SamplingParams
 
     repo, _, max_len, max_tokens, extra = MODELS[tag]
-    llm = LLM(model=repo, max_model_len=max_len, **extra)
+    llm = LLM(model=repo, max_model_len=max_len, **extra, **({"seed": seed} if seed else {}))
     params = SamplingParams(temperature=TEMP, max_tokens=max_tokens, n=REPS)
     convs = [[{"role": "system", "content": r["system"]}, {"role": "user", "content": r["user"]}] for r in rows]
     outs = llm.chat(convs, params)
@@ -61,18 +66,18 @@ def _batch(tag: str, rows: list[dict]) -> list[dict]:
 
 
 @app.function(gpu="H100", image=image, volumes=VOLUMES, timeout=3 * 60 * 60)
-def run_h100(tag: str, rows: list[dict]) -> list[dict]:
-    return _batch(tag, rows)
+def run_h100(tag: str, rows: list[dict], seed: int = 0) -> list[dict]:
+    return _batch(tag, rows, seed)
 
 
 @app.function(gpu="H200", image=image, volumes=VOLUMES, timeout=3 * 60 * 60)
-def run_h200(tag: str, rows: list[dict]) -> list[dict]:
-    return _batch(tag, rows)
+def run_h200(tag: str, rows: list[dict], seed: int = 0) -> list[dict]:
+    return _batch(tag, rows, seed)
 
 
 @app.function(gpu="A100-80GB", image=image, volumes=VOLUMES, timeout=3 * 60 * 60)
-def run_a100(tag: str, rows: list[dict]) -> list[dict]:
-    return _batch(tag, rows)
+def run_a100(tag: str, rows: list[dict], seed: int = 0) -> list[dict]:
+    return _batch(tag, rows, seed)
 
 
 def _parse(text: str, finish: str | None) -> dict:
@@ -96,21 +101,21 @@ def _parse(text: str, finish: str | None) -> dict:
 
 
 @app.local_entrypoint()
-def main(model: str, smoke: bool = False, prompt_set: str = "precedent"):
+def main(model: str, smoke: bool = False, prompt_set: str = "precedent", seed: int = 0):
     rows = [json.loads(l) for l in (HERE / f"{prompt_set}_prompts.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()]
     if smoke:
         rows = rows[:2] + rows[-2:]
     gpu = MODELS[model][1]
     fn = run_a100 if gpu.startswith("A100") else run_h200 if gpu == "H200" else run_h100
-    print(f"{model} on {gpu}: {len(rows)} prompts x {REPS} draws")
-    out = HERE / "results" / model / f"{prompt_set}_arms"
+    print(f"{model} on {gpu}: {len(rows)} prompts x {REPS} draws, engine seed {seed}")
+    out = HERE / "results" / (f"{model}_seed{seed}" if seed else model) / f"{prompt_set}_arms"
     out.mkdir(parents=True, exist_ok=True)
-    for x in fn.remote(model, rows):
+    for x in fn.remote(model, rows, seed):
         r = x["row"]; p = _parse(x["content"], x["finish"])
         (out / f"{r['arm']}__{r['item']}__r{x['rep']}.json").write_text(json.dumps({
             "arm": r["arm"], "item": r["item"], "record": r["record"], "rep": x["rep"], "label": r["label"],
             "stratum": r["stratum"], "model": MODELS[model][0], "endpoint": f"modal-vllm/{gpu}",
-            "temperature": TEMP, "system_sha": r["system_sha"], "user_sha": r["user_sha"],
+            "temperature": TEMP, "seed": seed, "system_sha": r["system_sha"], "user_sha": r["user_sha"],
             "flag": p.get("flag"), "suspicion": p.get("suspicion"), "reason": p.get("reason"),
             "flag_missing": "flag" not in p, "finish": x["finish"],
             "usage": {"prompt_tokens": x["prompt_tokens"], "completion_tokens": x["completion_tokens"]},

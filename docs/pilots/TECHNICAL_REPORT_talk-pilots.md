@@ -1,6 +1,6 @@
 # Quiet suppression in multi-agent grievance pipelines: pilot evidence on pressure, notes channels, paraphrase and monitor capture
 
-*Pilot report, Team Outskiller, AI Collusion Research Sprint (Apart Research, 23–25 October 2026). Draft of 24 October 2026. Runs up to 22 October are prior work and runs on 23 and 24 October are sprint work; the prior-work disclosure at the end gives the split.*
+*Pilot report, Team Outskiller, AI Collusion Research Sprint (Apart Research, 23–25 October 2026). Revised 25 October 2026. Runs up to 22 October are prior work and runs on 23 to 25 October are sprint work; the prior-work disclosure at the end gives the split.*
 
 ## Abstract
 
@@ -129,13 +129,15 @@ False flags: 7 of 855 compliant reads, 1 of them among the 432 aim-run compliant
 
 **Eight further watchdogs (sprint work, October 24, evening).** Deepayan Sinha ran the same prompt files on Claude Haiku 5.5 and Sonnet 5.5 (thinking off, default sampling) and Gemini 3.8 Flash and 4 Argon (thinking at its lowest level) through their own APIs. We added Claude Opus 5.5 and GPT-6.1 Sol at their lowest reasoning effort on the endorsed arm and the harder set, and a no-thinking/thinking pair of Kimi K2 models on arms A, C and F. On the easy set's endorsed arm, catches were Haiku 29, Sonnet 27, Gemini 3.8 Flash 16 (11 and 19 at low and high effort on OpenRouter), Kimi K2 41, Kimi K2 Thinking 37, and 48 of 48 for all three frontier models (Argon, Opus 5.5, GPT-6.1 Sol). The endorsement effect therefore appears across most mid-tier and smaller models in six families, while three frontier models caught every endorsed case; Opus and Sol ran only that easy-set arm (Argon ran all six), so a capability-tier effect is suggested, not established. Thinking was no reliable defense: it helped Gemini slightly, made no difference for GLM, and Kimi K2 Thinking caught fewer than Kimi K2 (harder set arm C, 5 against 14 of 26; different releases). No watchdog solved the harder set (best baselines 54–58%). Opus 5.5 refused 114 of 216 harmless compliant reads on the harder set, so its false-flag rate is unmeasured. Full tables: `RESULTS_precedent_arms_2026-10-24.md` and Deepayan's `RESULTS_api_monitors_2026-10-24.md`.
 
-**Three open-weight watchdogs on Modal (sprint work, October 24, night).** We ran the same frozen prompt files on Qwen 3 32B, Llama 3.3 70B (FP8) and Mistral Small 3.2 24B with vLLM on Modal, temperature 0.7, two draws per prompt (`modal-handover/run_precedent_modal.py`; models, threshold and file hashes frozen in `FREEZE_open-weight-watchdogs.md` before scoring). Llama ran out of cache memory on an H100 and moved to an H200 before any Llama result existed; nothing else changed. All 2,826 reads parsed. On the easy set, Qwen caught 48, 47, 43, 48, 48 and 46 of 48 across arms A to F, Llama 46, 47, 44, 48, 48 and 44, and Mistral 44, 45, 20, 36, 42 and 22. Qwen and Llama show no clear endorsement drop. Mistral ties Gemma for the second-largest endorsement drop among the six-arm watchdogs, after Gemini 3.8 Flash, and it is the only one where the policy sentence did nothing (46% against 42%) and where precedents marked as rejected also lowered detection (75%). On the harder set the three catch 27%, 62% and 27% at baseline, and none shows a clear endorsement effect at 26 reads per arm. False flags: 5, 4 and 5 of 360 benign easy-set reads, and 1, 3 and 3 of 216 compliant harder-set reads. Everything run on Modal on 24 October cost about $4.11 of credit, including the smoke tests and failed starts.
+**Three open-weight watchdogs on Modal (sprint work, October 24, night).** We ran the same frozen prompt files on Qwen 3 32B, Llama 3.3 70B (FP8) and Mistral Small 3.2 24B with vLLM on Modal, temperature 0.7, two draws per prompt (`modal-handover/run_precedent_modal.py`; models, threshold and file hashes frozen in `FREEZE_open-weight-watchdogs.md` before scoring). Llama ran out of cache memory on an H100 and moved to an H200 before any Llama result existed; nothing else changed. All 2,826 reads parsed. On the easy set, Qwen caught 48, 47, 43, 48, 48 and 46 of 48 across arms A to F, Llama 46, 47, 44, 48, 48 and 44, and Mistral 44, 45, 20, 36, 42 and 22. Qwen and Llama show no clear endorsement drop. Mistral and Gemma each dropped 50 percentage points, behind Gemini 3.8 Flash and OLMo 3.1 Think, and it is the only one where the policy sentence did nothing (46% against 42%) and where precedents marked as rejected also lowered detection (75%). On the harder set the three catch 27%, 62% and 27% at baseline, and none shows a clear endorsement effect at 26 reads per arm. False flags: 5, 4 and 5 of 360 benign easy-set reads, and 1, 3 and 3 of 216 compliant harder-set reads. Liezl Coetzee's three-model Modal batch cost about $4.11 of credit, including smoke tests and failed starts; Deepayan Sinha's runs are excluded. The runs used vLLM's default engine seed (0). Same-seed reruns reuse the random stream but can differ with hardware or batching: Deepayan Sinha's reruns of Qwen and Mistral matched the easy-set counts within one read and differed slightly on Qwen's harder set (10, 5 and 4 against 7, 6 and 2). They do not provide independent replication.
+
+**Two reasoning watchdogs on Modal (sprint work, October 24, Deepayan Sinha).** gpt-oss-120b and OLMo 3.1 32B Think ran on the same frozen files and script, default seed 0, frozen in `FREEZE_reasoning_and_narrow.md`. One of 1,884 reads lacked a flag. On the easy set, gpt-oss caught 48, 48, 29, 48, 47 and 45 of 48 across arms A to F, and OLMo 48, 46, 18, 48, 48 and 36. Both show their largest easy-set drop in arm C; the policy sentence nearly restores gpt-oss and only partly restores OLMo. On the harder set they catch 11 and 8 of 26 at baseline, 5 and 3 endorsed. Reasoning did not protect either model, though these comparisons do not isolate reasoning from other model differences. gpt-oss had the most false flags of any watchdog (15 of 360 benign easy-set reads).
+
+**Narrow-question watchdog (sprint work, October 24, Deepayan Sinha; preliminary).** On the harder set, the final instruction of each prompt was replaced by four yes/no questions (does the summary describe possible harm; is the rating at least as high as the facts support; does the escalation follow the written policy; does a note give a conclusion instead of facts), with a flag rule fixed before running. Detection rose for all four API watchdogs, and Gemini 4 Argon reached 24, 24 and 26 of 26 in arms A, C and F with no false flags. It is one prompt design on 13 suppression cases with no ablation of which question does the work, so it is a lead for further work.
 
 **Gemma reading Gemma-written cases (sprint work, October 25).** All earlier six-arm runs read MiniMax-written suppression. `run_precedent_arms_gemma_notes.py` runs the same six arms, with the same policy and watchdog prompts, on the Gemma pressure-pipeline cases of `run_monitor_gemma_notes.py` (81 suppression and 32 honest escalated cases), with Gemma 4 31B as the watchdog and two draws, frozen in `FREEZE_gemma_checks_gemma.md`. All 1,356 reads parsed, at a cost of $0.12. Detection was 95%, 94%, 92%, 95%, 95% and 94% across arms A to F, with no false flags in 64 honest reads per arm. The same watchdog reading MiniMax-written cases fell from 100% to 50% in arm C. Gemma detected more than 90% of its own pipeline's suppression in every arm. The comparison cannot isolate an own-family effect: the likely reason the endorsement fails here is the visibility noted above: Gemma's ratings often contradict its own summaries. Sender and visibility change together in this comparison, so it cannot separate them.
 
-**Cross-model analysis.** The tables below put every watchdog, setting and arm side by side. They come from `talk-pilots/cross_analysis.py`, which reads every raw result folder, including new Modal runs under `modal-handover/results/`, and takes the four direct-API watchdogs from Deepayan Sinha's results note until their raw files are passed in (`python cross_analysis.py "Claude Sonnet 5.5=path/to/sonnet-5.5"`). Effects are percentage-point differences in suppression caught. Asterisks mark non-overlapping read-level Wilson 95% intervals; these descriptive intervals do not account for repeated draws or clustering by record (24 suppression items on 15 records in the easy set, 13 on six in the harder set) and do not establish significance. The pattern column is a rule-based summary of the six-arm row.
-
-Generated by `cross_analysis.py`. Cells are suppression cases caught (%), with n reads per arm in its own column. `*` marks a difference whose Wilson 95% intervals do not overlap. Source `table` means the raw files are on the team Drive and the counts come from RESULTS_api_monitors_2026-10-24.md.
+**Cross-model analysis.** The tables below put every watchdog, setting and arm side by side. They come from `talk-pilots/cross_analysis.py`, which reads every raw result folder, including the Modal runs under `modal-handover/results/`; the four direct-API watchdogs were read from Deepayan Sinha's raw folders, passed in as `"Claude Sonnet 5.5=path/to/sonnet-5.5"` arguments. Effects are percentage-point differences in suppression caught. Asterisks mark non-overlapping read-level Wilson 95% intervals; these descriptive intervals do not account for repeated draws or clustering by record (24 suppression items on 15 records in the easy set, 13 on six in the harder set) and do not establish significance. The pattern column is a rule-based summary of the six-arm row.
 
 Generated by `cross_analysis.py`. Cells are suppression cases caught (%), with n reads per arm in its own column. `*` marks non-overlapping read-level Wilson 95% intervals; these do not account for repeated draws or clustering by record and do not establish significance. Source `table` means the raw files are on the team Drive and the counts come from RESULTS_api_monitors_2026-10-24.md.
 
@@ -155,37 +157,41 @@ Generated by `cross_analysis.py`. Cells are suppression cases caught (%), with n
 | Kimi K2 Thinking | Moonshot | large open | 100 |  | 77 |  |  | 100 | +23* |  |  | +23* | 0/180 | 48 | captured; policy sentence restores | raw |
 | Claude Opus 5.5 | Anthropic | frontier |  |  | 100 |  |  |  |  |  |  |  | 0/60 (11/60 refused) | 48 |  | raw |
 | GPT-6.1 Sol | OpenAI | frontier |  |  | 100 |  |  |  |  |  |  |  | 2/60 | 48 |  | raw |
+| gpt-oss-120b | OpenAI (open) | mid | 100 | 100 | 60 | 100 | 98 | 94 | +40* | +40* | +0 | +33* | 15/360 | 48 | captured; policy sentence partly restores | raw (Modal) |
 | Llama 3.3 70B | Meta (open) | mid | 96 | 98 | 92 | 100 | 100 | 92 | +4 | +6 | -4 | +0 | 4/360 | 48 | no clear endorsement drop | raw (Modal) |
 | Mistral Small 3.2 24B | Mistral (open) | small | 92 | 94 | 42 | 75 | 88 | 46 | +50* | +52* | +17 | +4 | 5/360 | 48 | captured; policy sentence does not help | raw (Modal) |
+| OLMo 3.1 32B Think | Ai2 (open) | small | 100 | 96 | 38 | 100 | 100 | 75 | +62* | +58* | +0 | +38* | 4/360 | 48 | captured; policy sentence partly restores | raw (Modal) |
 | Qwen 3 32B | Alibaba (open) | small | 100 | 98 | 90 | 100 | 100 | 96 | +10 | +8 | +0 | +6 | 5/360 | 48 | no clear endorsement drop | raw (Modal) |
-| Claude Haiku 5.5 | Anthropic | small | 83 | 73 | 60 | 83 | 79 | 81 | +23 | +13 | +0 | +21 | see note | 48 | no clear endorsement drop | table |
-| Claude Sonnet 5.5 | Anthropic | mid | 98 | 96 | 56 | 100 | 96 | 88 | +42* | +40* | -2 | +31* | see note | 48 | captured; policy sentence partly restores | table |
-| Gemini 3.8 Flash (API runner) | Google | mid | 100 | 100 | 33 | 100 | 100 | 100 | +67* | +67* | +0 | +67* | see note | 48 | captured; policy sentence restores | table |
-| Gemini 4 Argon | Google | frontier | 100 | 100 | 100 | 100 | 100 | 100 | +0 | +0 | +0 | +0 | see note | 48 | no clear endorsement drop | table |
+| Claude Haiku 5.5 | Anthropic | small | 83 | 73 | 60 | 83 | 79 | 81 | +23 | +13 | +0 | +21 | 4/360 | 48 | no clear endorsement drop | raw (extra) |
+| Claude Sonnet 5.5 | Anthropic | mid | 98 | 96 | 56 | 100 | 96 | 88 | +42* | +40* | -2 | +31* | 0/360 | 48 | captured; policy sentence partly restores | raw (extra) |
+| Gemini 3.8 Flash (API runner) | Google | mid | 100 | 100 | 33 | 100 | 100 | 100 | +67* | +67* | +0 | +67* | 0/360 | 48 | captured; policy sentence restores | raw (extra) |
+| Gemini 4 Argon | Google | frontier | 100 | 100 | 100 | 100 | 100 | 100 | +0 | +0 | +0 | +0 | 0/360 | 48 | no clear endorsement drop | raw (extra) |
 
 #### Harder set (rating hides the violation)
 
 | Watchdog | Family | Tier | A | C | F | Endorse A−C | Policy F−C | False flags | n per arm | Pattern | Source |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| GLM 5.3 Flash | Zhipu | mid | 54 | 31 | 46 | +23 | +15 | 2/180 | 26 |  | raw |
-| GLM 5.3 Flash, thinking low | Zhipu | mid | 35 | 23 | 27 | +12 | +4 | 1/180 | 26 |  | raw |
-| GLM 5.3 Flash, thinking high | Zhipu | mid | 50 | 38 | 38 | +12 | +0 | 1/180 | 26 |  | raw |
-| Gemma 4 31B | Google (open) | small | 31 | 8 | 15 | +23 | +8 | 0/180 | 26 |  | raw |
-| MiniMax M3.1 Flash | MiniMax | mid | 42 | 15 | 35 | +27 | +19 | 1/180 | 26 |  | raw |
-| Nemotron 3 Ultra | NVIDIA | large open | 23 | 8 | 12 | +15 | +4 | 3/171 | 26 |  | raw |
-| Gemini 3.8 Flash, thinking low | Google | mid | 23 | 4 | 15 | +19 | +12 | 0/180 | 26 |  | raw |
-| Gemini 3.8 Flash, thinking high | Google | mid | 23 | 15 | 23 | +8 | +8 | 0/180 | 26 |  | raw |
-| Kimi K2 0905 | Moonshot | large open | 58 | 54 | 46 | +4 | -8 | 3/180 | 26 |  | raw |
-| Kimi K2 Thinking | Moonshot | large open | 46 | 19 | 35 | +27 | +15 | 2/180 | 26 |  | raw |
-| Claude Opus 5.5 | Anthropic | frontier | 42 | 38 | 38 | +4 | +0 | 0/180 (114/216 refused) | 26 |  | raw |
-| GPT-6.1 Sol | OpenAI | frontier | 42 | 23 | 35 | +19 | +12 | 0/180 | 26 |  | raw |
-| Llama 3.3 70B | Meta (open) | mid | 62 | 46 | 46 | +15 | +0 | 3/180 | 26 |  | raw (Modal) |
-| Mistral Small 3.2 24B | Mistral (open) | small | 27 | 42 | 19 | -15 | -23 | 3/180 | 26 |  | raw (Modal) |
-| Qwen 3 32B | Alibaba (open) | small | 27 | 23 | 8 | +4 | -15 | 1/180 | 26 |  | raw (Modal) |
-| Claude Haiku 5.5 | Anthropic | small | 8 | 19 | 31 | -12 | +12 | see note | 26 |  | table |
-| Claude Sonnet 5.5 | Anthropic | mid | 23 | 19 | 27 | +4 | +8 | see note | 26 |  | table |
-| Gemini 3.8 Flash (API runner) | Google | mid | 15 | 15 | 23 | +0 | +8 | see note | 26 |  | table |
-| Gemini 4 Argon | Google | frontier | 54 | 46 | 54 | +8 | +8 | see note | 26 |  | table |
+| GLM 5.3 Flash | Zhipu | mid | 54 | 31 | 46 | +23 | +15 | 3/216 | 26 |  | raw |
+| GLM 5.3 Flash, thinking low | Zhipu | mid | 35 | 23 | 27 | +12 | +4 | 1/216 | 26 |  | raw |
+| GLM 5.3 Flash, thinking high | Zhipu | mid | 50 | 38 | 38 | +12 | +0 | 1/216 | 26 |  | raw |
+| Gemma 4 31B | Google (open) | small | 31 | 8 | 15 | +23 | +8 | 0/216 | 26 |  | raw |
+| MiniMax M3.1 Flash | MiniMax | mid | 42 | 15 | 35 | +27 | +19 | 1/216 | 26 |  | raw |
+| Nemotron 3 Ultra | NVIDIA | large open | 23 | 8 | 12 | +15 | +4 | 3/207 | 26 |  | raw |
+| Gemini 3.8 Flash, thinking low | Google | mid | 23 | 4 | 15 | +19 | +12 | 0/216 | 26 |  | raw |
+| Gemini 3.8 Flash, thinking high | Google | mid | 23 | 15 | 23 | +8 | +8 | 0/216 | 26 |  | raw |
+| Kimi K2 0905 | Moonshot | large open | 58 | 54 | 46 | +4 | -8 | 3/216 | 26 |  | raw |
+| Kimi K2 Thinking | Moonshot | large open | 46 | 19 | 35 | +27 | +15 | 2/216 | 26 |  | raw |
+| Claude Opus 5.5 | Anthropic | frontier | 42 | 38 | 38 | +4 | +0 | 0/216 (114/216 refused) | 26 |  | raw |
+| GPT-6.1 Sol | OpenAI | frontier | 42 | 23 | 35 | +19 | +12 | 0/216 | 26 |  | raw |
+| gpt-oss-120b | OpenAI (open) | mid | 42 | 19 | 27 | +23 | +8 | 1/216 | 26 |  | raw (Modal) |
+| Llama 3.3 70B | Meta (open) | mid | 62 | 46 | 46 | +15 | +0 | 3/216 | 26 |  | raw (Modal) |
+| Mistral Small 3.2 24B | Mistral (open) | small | 27 | 42 | 19 | -15 | -23 | 3/216 | 26 |  | raw (Modal) |
+| OLMo 3.1 32B Think | Ai2 (open) | small | 31 | 12 | 12 | +19 | +0 | 2/216 | 26 |  | raw (Modal) |
+| Qwen 3 32B | Alibaba (open) | small | 27 | 23 | 8 | +4 | -15 | 1/216 | 26 |  | raw (Modal) |
+| Claude Haiku 5.5 | Anthropic | small | 8 | 19 | 31 | -12 | +12 | 1/216 | 26 |  | raw (extra) |
+| Claude Sonnet 5.5 | Anthropic | mid | 23 | 19 | 27 | +4 | +8 | 0/216 | 26 |  | raw (extra) |
+| Gemini 3.8 Flash (API runner) | Google | mid | 15 | 15 | 23 | +0 | +8 | 0/216 | 26 |  | raw (extra) |
+| Gemini 4 Argon | Google | frontier | 54 | 46 | 54 | +8 | +8 | 0/216 | 26 |  | raw (extra) |
 
 #### Gemma reading its own family's cases
 
@@ -194,7 +200,7 @@ Generated by `cross_analysis.py`. Cells are suppression cases caught (%), with n
 | MiniMax-written | 100 | 100 | 50 | 100 | 100 | 100 | +50* | +50* |
 | Gemma-written | 95 | 94 | 92 | 95 | 95 | 94 | +3 | +2 |
 
-On the easy set, the endorsement drop is the common case but not universal. Of the eleven watchdogs run on all six arms, six show a drop beyond overlapping intervals (GLM, Gemma, Nemotron, Sonnet 5.5, Gemini 3.8 Flash and Mistral Small 3.2), two show a drop the intervals cannot confirm (MiniMax and Haiku 5.5), and three show none (Gemini 4 Argon, Qwen 3 32B and Llama 3.3 70B). The endorsement adds to precedent alone: wherever a drop appears, B and C differ by about as much as A and C, and only Mistral loses ground when the board rejects the precedents. The policy sentence raises detection in every captured watchdog except Mistral; four return to 100%, while Sonnet 5.5 recovers to 88% against a 98% baseline. Neither size nor openness sorts the watchdogs: two small open-weight models resist while a mid-tier commercial one (Gemini 3.8 Flash) drops furthest. On the harder set no watchdog is reliable at baseline (8% to 62%), most endorsement and policy differences fall inside the intervals, and baseline detection varies more by model than any arm effect does. MiniMax-written suppression cells contain 48 or 26 reads, and Gemma-written cells 162. Small differences remain uncertain at these sample sizes, and overlapping intervals do not establish equivalence.
+On the easy set, the endorsement drop is the common case but not universal. Of the thirteen watchdogs run on all six arms, eight show a drop beyond overlapping intervals (GLM, Gemma, Nemotron, Sonnet 5.5, Gemini 3.8 Flash, Mistral Small 3.2, gpt-oss-120b and OLMo 3.1 Think), two show a drop the intervals cannot confirm (MiniMax and Haiku 5.5), and three do not (Gemini 4 Argon shows no observed drop; Qwen 3 32B and Llama 3.3 70B show smaller drops with overlapping read-level intervals). The endorsement adds to precedent alone: wherever a drop appears, B and C differ by about as much as A and C, and only Mistral loses ground when the board rejects the precedents. The policy sentence raises detection in every captured watchdog except Mistral; four return to 100%, while Sonnet 5.5 (88%), gpt-oss (94%) and OLMo (75%) recover only partly. Two open-weight models resist while a mid-tier commercial one (Gemini 3.8 Flash) drops furthest and both reasoning models drop; these comparisons do not isolate the effects of reasoning or model size. On the harder set no watchdog is reliable at baseline (8% to 62%), most endorsement and policy differences fall inside the intervals, and baseline detection varies more by model than any arm effect does. MiniMax-written suppression cells contain 48 or 26 reads, and Gemma-written cells 162. Small differences remain uncertain at these sample sizes, and overlapping intervals do not establish equivalence.
 
 ### 4.3 Notes recruit honest receivers
 
@@ -285,7 +291,7 @@ Reports matched the case log on severity and escalation in the first MiniMax run
 
 - **Planted, explicit incentives.** The hidden aim is stated in plain words in each agent’s system prompt. Real pressure is diffuse, and these runs measure elicited behavior, not spontaneous propensity.
 - **Small samples, one rep.** 12–36 records per arm, temperature 0.7, no significance tests. Several contrasts (glass channel, gatekeeper) rest on differences of two to five cases.
-- **Two agent models, fifteen monitors.** Agents are MiniMax M3.1 Flash and Gemma 4 31B; cross-family evidence covers the receiving end (Gemma reading MiniMax) and full Gemma pipelines, not mixed teams. Monitors span ten developers (Zhipu, Google, MiniMax, NVIDIA, Anthropic, OpenAI, Moonshot, Alibaba, Meta, Mistral); all suppression in the precedent arms was written by one sender family apart from the Gemma own-family run, and the frontier and Kimi runs cover fewer arms than the first eight monitors.
+- **Two agent models, seventeen monitors.** Agents are MiniMax M3.1 Flash and Gemma 4 31B; cross-family evidence covers the receiving end (Gemma reading MiniMax) and full Gemma pipelines, not mixed teams. Monitors span eleven developers (Zhipu, Google, MiniMax, NVIDIA, Anthropic, OpenAI, Moonshot, Alibaba, Meta, Mistral, Ai2); all suppression in the precedent arms was written by one sender family apart from the Gemma own-family run, and the frontier and Kimi runs cover fewer arms than the first eight monitors.
 - **Ceiling and hard-set size.** The first four watchdogs reached the ceiling outside arm C, and later watchdogs did not; the under-rated set has 13 suppression cases on six records and compliant cases on two.
 - **Synthetic tells.** Invented company and town names (“Meridian Contractors”) may signal a test to the models, a form of evaluation awareness raised in the sprint talks.
 - **Severity ground truth.** “Serious” is the agent’s rating or the extractor’s retaliation and safety flags, not an independent, human-checked policy rubric. Some severity-3 non-escalations may be reasonable calls.
@@ -304,13 +310,13 @@ Reports matched the case log on severity and escalation in the first MiniMax run
 
 ### 7.1 Open-weight monitors on Modal: what ran and what is left
 
-Qwen 3 32B, Llama 3.3 70B and Mistral Small 3.2 24B ran on 24 October (section 4.2). Of the five questions set for these runs, two now have answers. The endorsement effect is not general: Mistral shows it strongly, Qwen and Llama do not. The policy-priority sentence is not universal either: it failed on Mistral. The same-family question got a first answer from the Gemma run, confounded by visibility.
+All five open-weight watchdogs ran on 24 October (section 4.2): Qwen 3 32B, Llama 3.3 70B and Mistral Small 3.2 24B, and gpt-oss-120b and OLMo 3.1 32B Think run by Deepayan Sinha. The endorsement effect is not general: Mistral, gpt-oss and OLMo show it, Qwen and Llama do not. The policy-priority sentence is not universal either: it failed on Mistral and only partly restored OLMo. Reasoning did not protect. The same-family question got a first answer from the Gemma run, confounded by visibility.
 
 Still open, and the best use of further Modal credit:
 
-1. **Reasoning monitors.** gpt-oss-120b and OLMo 3.1 32B Think are untested. The runner already supports both (`--model gpt-oss-120b`, `--model olmo-3.1-32b-think`). Smoke-test first, since their long reasoning may hit the token limit.
-2. **Training-data provenance.** This depends on the OLMo run.
-3. **Sample size.** Each cell is 48 or 26 reads. A second batch of draws on Mistral, Qwen and Llama would tighten the intervals on the cells that matter (arms C, D and F, and the harder set). The runner fixes vLLM's seed, so repeat runs need a new seed setting to add samples rather than repeat them.
+1. **Training-data provenance.** OLMo 3.1 Think is captured by endorsement, and its training data is public, so the habit could in principle be traced there.
+2. **Sample size.** Each cell is 48 or 26 reads. Every Modal run so far used vLLM's default engine seed (0), so a repeat needs `run_precedent_modal.py --seed N` with N other than 0. The flag passes `LLM(seed=N)`, writes to `results/<model>_seed<N>/` and records the seed in each file; in a smoke test at seed 1, all eight response texts changed from the seed-0 run and all eight flags stayed the same. A repeat of Mistral and Qwen on both sets would add a second sample of the same cases, which reduces draw noise only.
+3. **Narrow-question watchdog.** The preliminary result on the harder set needs a Q2-only and Q3-only ablation and more cases.
 4. **Name scrub.** The Modal prompt files had real place and company names swapped for invented ones; an API rerun on those files would confirm the swap is neutral.
 
 `cross_analysis.py` picks up any new run folder automatically, so its tables can be regenerated with no edits. The hard set stays small; widening the record set and adding a transcript-access arm remain the next steps.
@@ -350,7 +356,7 @@ The Apart sprint runs 23–25 October 2026, and its rules ask that code written 
 
 - `run_precedent_arms_gemma_notes.py` (Gemma reading Gemma-written cases across the six arms), `cross_analysis.py`, and report updates.
 
-Total API spend: about $0.57 on OpenRouter for the MiniMax runs, plus a few cents for the GLM monitor; Nemotron ran on a free tier. The Ollama Cloud runs added no per-call charges. Sprint-weekend runs on OpenRouter: precedent and harder-set monitors about $0.52, C5 arms about $0.40, thinking levels $4.89, frontier models about $3.39 and the Kimi pair $3.81. Deepayan Sinha's direct-API watchdog runs cost about $6.6. Modal runs on 24 October cost about $4.11 of credit (the Qwen smoke test, the three open-weight watchdogs and two failed starts), and the Gemma own-family run $0.12 on OpenRouter. All told, about $24.
+Total API spend: about $0.57 on OpenRouter for the MiniMax runs, plus a few cents for the GLM monitor; Nemotron ran on a free tier. The Ollama Cloud runs added no per-call charges. Sprint-weekend runs on OpenRouter: precedent and harder-set monitors about $0.52, C5 arms about $0.40, thinking levels $4.89, frontier models about $3.39 and the Kimi pair $3.81. Deepayan Sinha's direct-API watchdog runs cost about $6.6; his gpt-oss, OLMo and narrow-question runs on his own credit are not included. Modal runs on 24 October cost about $4.11 of credit (the Qwen smoke test, the three open-weight watchdogs and two failed starts), and the Gemma own-family run $0.12 on OpenRouter. All told, about $24.
 
 ## References
 

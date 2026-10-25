@@ -16,7 +16,7 @@ A compliance monitor reads processed grievance cases and flags suppression. In o
 | `mistral-small-3.2-24b` | Mistral Small 3.2 24B | A100 80GB | about $2 |
 | `olmo-3.1-32b-think` | OLMo 3.1 32B Think | H100 | $3–5 |
 
-The costs are rough estimates, scaled from one smoke test: Qwen 3 32B on an H100 cost about $0.37 for start-up plus 8 calls. Only Qwen 3 32B has been tested on Modal so far, so smoke-test any other model before its full run. Reasoning models (gpt-oss, Qwen, OLMo Think) write long answers and may cost more.
+The costs are rough estimates, scaled from one smoke test: Qwen 3 32B on an H100 cost about $0.37 for start-up plus 8 calls. All five models have now completed both prompt sets; smoke-test any new configuration before a full run. Reasoning models (gpt-oss, Qwen, OLMo Think) write long answers and may cost more.
 
 Suggested split: Carl takes `gpt-oss-120b` then `llama-3.3-70b`; Prashanth takes `qwen3-32b` then `mistral-small-3.2-24b`. Most of the cost is the first download and start-up (10–20 minutes). The calls themselves take minutes.
 
@@ -50,3 +50,15 @@ Suggested split: Carl takes `gpt-oss-120b` then `llama-3.3-70b`; Prashanth takes
 ## What not to change
 
 Keep the prompt files, temperature (0.7) and two draws per prompt as they are, so results compare with the OpenRouter monitors.
+
+## Repeat runs at a new seed
+
+Every run so far used vLLM's default engine seed (0), so running the script again unchanged reuses the same random stream and gives the same or nearly the same answers. For a second sample, agree the seed in the group first (1 was proposed), then add `--seed 1` to every command, for example:
+
+```bash
+modal run run_precedent_modal.py --model qwen3-32b --seed 1 --smoke
+modal run run_precedent_modal.py --model qwen3-32b --seed 1
+modal run run_precedent_modal.py --model qwen3-32b --seed 1 --prompt-set underrated
+```
+
+Results go to `results/<model>_seed1/`, so the seed-0 folders are never overwritten. A smoke test at seed 1 on Qwen (25 Oct) changed all eight response texts from the seed-0 run (all eight flags stayed the same), so the seed is applied.

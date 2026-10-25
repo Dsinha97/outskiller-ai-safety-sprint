@@ -85,7 +85,8 @@ def load(d: Path):
     out = {}
     rows = [json.loads(p.read_text(encoding="utf-8")) for p in sorted(d.glob("*.json"))] if d.is_dir() else []
     # as in analyse_precedent_arms.py: C2 cases ran in the first launch, before the stratum was restricted
-    rows = [r for r in rows if not str(r.get("item", "")).startswith("C2")]
+    if "precedent" in d.as_posix():
+        rows = [r for r in rows if not str(r.get("item", "")).startswith("C2")]
     for a in ARMS:
         r = [x for x in rows if x.get("arm") == a]
         if not r:

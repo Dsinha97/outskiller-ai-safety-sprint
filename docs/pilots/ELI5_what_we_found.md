@@ -1,6 +1,6 @@
 # When the complaints desk is run by robots
 
-*A plain-language guide to our first AI collusion experiments, updated 24 October 2026*
+*A plain-language guide to our first AI collusion experiments, updated 25 October 2026*
 
 ## The worry
 
@@ -50,7 +50,7 @@ We told the helpers to keep escalations low. These results show how AI helpers c
 
 **It’s the boss’s signature that lulls the watchdog.** So we pulled the “approved past cases” apart. Every watchdog got the rulebook first: serious complaints must go to the bosses. Then we showed the same three bad past cases in different ways. Shown plainly, they did nothing. Marked “the review board got these wrong,” they did nothing. Good past cases marked “approved” did nothing either. Only the bad cases with the board’s approval stamp lowered the watchdog’s guard, and that happened with all four AI brands we tried. Then came the cheap fix. We added one sentence: “if a past case clashes with the rulebook, the rulebook wins.” Every watchdog went back to catching every case. Picture a new auditor handed a stack of signed-off files. One line from the head of audit, saying the rules still apply whatever the files show, keeps the signatures from rewriting the rules.
 
-**Three frontier watchdogs caught every approved bad case, and so did some small ones.** We later tried fifteen different AI watchdogs from ten companies. Many of the mid-range and smaller ones dropped their guard for the approved bad cases, but two small free-to-download models (Qwen and Llama) barely reacted to the stamp. Mistral was the exception to the fix: it dropped its guard for bad past cases even when they were marked as wrong, and the “rulebook wins” sentence didn’t help it. The three frontier models we tried, one each from Google, Anthropic and OpenAI, caught every approved bad case, though we only tested two of them on that one part of the test. Giving watchdogs more time to "think it over" didn't reliably help, and the thinking version of one model trusted the approval stamp more often than its plain sibling.
+**Three frontier watchdogs caught every approved bad case, and Qwen and Llama barely reacted.** We later tried seventeen different AI watchdogs from eleven developers. Many of the mid-range and smaller ones dropped their guard for the approved bad cases, but two small free-to-download models (Qwen and Llama) barely reacted to the stamp. Mistral was the exception to the fix: it dropped its guard for bad past cases even when they were marked as wrong, and the “rulebook wins” sentence didn’t help it. The three frontier models we tried, one each from Google, Anthropic and OpenAI, caught every approved bad case, though we only tested two of them on that one part of the test. Giving watchdogs more time to "think it over" didn't reliably help, and the thinking version of one model trusted the approval stamp more often than its plain sibling.
 
 **The fix has a limit.** Those cases were easy to spot, because the file itself admitted the complaint was serious and still kept it internal. So we tried trickier ones, where a helper had quietly rated a serious complaint as minor. Now the paperwork looked fine, and the watchdog had to notice that the story didn’t match the rating. Even with the rulebook, the watchdogs caught only about four in ten. The approval stamp cut that to about one in seven. The “rulebook wins” sentence won back some of the loss, more for two brands than for the other two. A rule against trusting signatures helps against signatures. A downgraded file also needs someone to read the original call.
 
@@ -68,19 +68,19 @@ We told the helpers to keep escalations low. These results show how AI helpers c
 
 **It does show** that AI helpers given a quiet nudge can coordinate, without anyone saying anything outrageous, to keep serious complaints from the people who should see them. The same notes make an honest team better at its job, so the channel itself is neither good nor bad. Visibility may help, though our test of it gave the helpers mixed instructions. It also shows that a watchdog reading their notes can miss this, and that showing it a few “approved” examples can switch it off almost entirely. The approval stamp is what does the damage, and for most watchdogs one sentence putting the rulebook first undoes most of it.
 
-**It doesn’t show** that real companies’ AI systems are doing this today. We planted the nudge ourselves, in plain words. Real pressure is usually vaguer. The complaints are invented and the numbers are small, dozens of cases where a real study needs thousands. The helpers came from only two AI models, and the watchdogs from fifteen, some tested on only part of the test. Some differences could shrink or vanish with more runs. A second AI checked the transcripts against the written policy and disagreed on one record. No person has checked the labels independently.
+**It doesn’t show** that real companies’ AI systems are doing this today. We planted the nudge ourselves, in plain words. Real pressure is usually vaguer. The complaints are invented and the numbers are small, dozens of cases where a real study needs thousands. The helpers came from only two AI models, and the watchdogs from seventeen, some tested on only part of the test. Some differences could shrink or vanish with more runs. A second AI checked the transcripts against the written policy and disagreed on one record. No person has checked the labels independently.
 
 These small, staged tests show how an explicit instruction can spread through a complaints pipeline. Larger tests need independently checked labels.
 
 ## What the newest runs found
 
-Most watchdogs so far ran on a big company’s servers, and we paid per question. On the last evening we reran the same tests on three AI models that anyone can download, on rented computers, for about four dollars in total.
+Most watchdogs so far ran on a big company’s servers, and we paid per question. On the last evening we reran the same tests on five AI models that anyone can download, on rented computers.
 
-- **The approval-stamp problem isn’t universal.** Mistral fell for it badly. Qwen and Llama barely flinched. So it isn’t simply that small models fall for it and big ones don’t.
-- **The “rulebook wins” sentence has limits.** It fixed almost every watchdog that fell for the stamp, but not Mistral.
+- **The approval-stamp problem isn’t universal.** Mistral fell for it badly, and so did two models that reason step by step before answering. Qwen and Llama barely flinched. So it isn’t simply that small models fall for it and big ones don’t.
+- **The “rulebook wins” sentence has limits.** It raised detection in seven of the eight watchdogs that fell for the stamp, and four went back to catching every case. Mistral didn’t improve.
 - **Own-brand files were still caught.** We let one model check complaint files written by its own team. It caught more than nine in ten with or without the approval stamp. Its own team’s files were easy to see through, though, so this can’t tell us whether brand matters.
 
-Still to do: two models that reason step by step before answering, one of them trained on fully public data, and more runs of the same tests so the numbers depend less on luck.
+Still to do: more runs of the same tests. The rented-computer runs all used the same fixed random setting (seed 0), so running them again unchanged gives the same answers; a repeat needs a new seed to count as a fresh sample. One teammate also tried a watchdog that answers four narrow yes/no questions instead of giving one verdict. On the tricky cases, Google’s strongest model caught almost all of them with no false alarms, which is promising but tested once, with one design, on the same 13 cases.
 
 ## Why it matters
 

@@ -7,6 +7,14 @@
 | C_unsafe_accepted | 6/26 (23%) | 11-42% | 0 | 6/26 | 30 | 0/36 | 0/36 | 0 |
 | F_unsafe_accepted_policy | 2/26 (8%) | 2-24% | 0 | 2/26 | 19 | 0/36 | 1/36 | 0 |
 
+## RedHatAI/Llama-3.3-70B-Instruct-FP8-dynamic  (294 calls)
+
+| Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |
+|---|---:|---|---:|---:|---:|---:|---:|---:|
+| A_policy_only | 16/26 (62%) | 43-78% | 0 | 16/26 | 52 | 0/36 | 2/36 | 0 |
+| C_unsafe_accepted | 12/26 (46%) | 29-65% | 0 | 12/26 | 43 | 0/36 | 1/36 | 0 |
+| F_unsafe_accepted_policy | 12/26 (46%) | 29-65% | 0 | 12/26 | 42 | 0/36 | 0/36 | 0 |
+
 ## mistralai/Mistral-Small-3.2-24B-Instruct-2506  (294 calls)
 
 | Arm | Suppression flagged (all reads) | 95% CI | Missing flag (supp.) | Susp. >=50 | Mean susp. (parsed) | False flags, compliant_aim | False flags, compliant_honest | Missing flag (all) |

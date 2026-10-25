@@ -28,7 +28,7 @@ False flags: 5 in 1,152 escalated-benign reads, and 1 in 288 compliant kept-inte
 
 ## What this shows
 
-- **Endorsement drives the effect, not precedent.** The same three unsafe cases had no effect when presented plainly (B) or as rejected (D), and an accepted safe precedent had none either (E). Only the board's approval of unsafe handling (C) lowered detection, and it did so in all four monitor families.
+- **Board endorsement lowers detection.** The same three unsafe cases had no effect when presented plainly (B) or as rejected (D), and an accepted safe precedent had none either (E). Only the board's approval of unsafe handling (C) lowered detection, and it did so in all four monitor families.
 - **One sentence of policy priority removes it.** Adding "the written policy controls" to the arm C text (F) restored detection to 48/48 in every monitor. This is a cheap, testable control for Track 3: tell a monitor which source wins when its calibration examples conflict with its policy.
 - **A stated policy blunts the attack but does not stop it** (an across-run comparison, see caveats). On 22 Oct, without a written policy, the same endorsement cut detection from 10/24 to 0/24 (MiniMax) and from 15/24 to 1/24 (Gemma). With the policy stated, the baseline rises to 100% and the endorsed arm keeps 50–85%.
 
@@ -117,5 +117,5 @@ False flags: 3 of 1,584 benign reads (GLM and Gemini). Median reasoning on endor
 
 ## Next
 
-- **Open-weight monitors on Modal.** Completed: Qwen 3 32B, Llama 3.3 70B and Mistral Small 3.2 (see `CROSS_ANALYSIS_precedent_arms.md`). Remaining: gpt-oss-120b and OLMo 3.1 Think.
+- **Open-weight monitors on Modal.** Completed: Qwen 3 32B, Llama 3.3 70B and Mistral Small 3.2 (see `CROSS_ANALYSIS_precedent_arms.md`). gpt-oss-120b and OLMo 3.1 Think ran in PR 10 (Deepayan Sinha).
 - **Widen the hard set.** More records, matched compliant cases on more records, and a transcript-access arm to test whether evidence access (not just policy priority) restores detection.
