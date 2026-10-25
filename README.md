@@ -1,4 +1,4 @@
-# Outskiller AI Safety Sprint: AI Collusion
+# Quiet Suppression AI Safety Sprint: AI Collusion
 
 Code, configs and logged results for our team's entry in the [Apart Research AI Collusion Research Sprint](https://apartresearch.com/sprints/ai-collusion-research-sprint-2026-10-23-to-2026-10-25) (Oct 23-25, 2026). Submissions close Sun Oct 25, 11:59 PM AoE.
 
