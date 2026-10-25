@@ -1,6 +1,6 @@
 # Quiet suppression in multi-agent grievance pipelines: pilot evidence on pressure, notes channels, paraphrase and monitor capture
 
-*Pilot report, Team Outskiller, AI Collusion Research Sprint (Apart Research, 23–25 October 2026). Revised 25 October 2026. Runs up to 22 October are prior work and runs on 23 to 25 October are sprint work; the prior-work disclosure at the end gives the split.*
+*Pilot report, Team Quiet Suppression, AI Collusion Research Sprint (Apart Research, 23–25 October 2026). Revised 25 October 2026. Runs up to 22 October are prior work and runs on 23 to 25 October are sprint work; the prior-work disclosure at the end gives the split.*
 
 ## Abstract
 
