@@ -26,7 +26,7 @@ The sprint runs 23–25 October 2026. Preexisting means written or run before th
 | `modal-handover/run_precedent_modal.py --seed N` | Sprint work (25 Oct): optional engine seed for repeat samples; with no flag the engine is built as before (vLLM default seed 0) |
 | `modal-handover/FREEZE_open-weight-watchdogs.md` | Sprint work (24 Oct): models, threshold and file hashes frozen before scoring the Qwen 3 32B, Llama 3.3 70B and Mistral Small 3.2 runs; records the later H200 change for Llama |
 | `talk-pilots/run_precedent_arms_gemma_notes.py`, `FREEZE_gemma_checks_gemma.md` | Sprint work (25 Oct): the six arms on Gemma-written cases with Gemma as watchdog |
-| `talk-pilots/deterministic_baseline.py` | Sprint work (25 Oct): rule check (severity 3 or 4 and not escalated) as a no-model baseline on both prompt sets |
+| `talk-pilots/deterministic_baseline.py` | Sprint work (25 Oct): rule check (severity 3 or 4 and not escalated) as a no-model baseline on both prompt sets. Needs the cached trajectories (team Drive, not in the repo) |
 | `talk-pilots/cross_analysis.py` | Sprint work (25 Oct): every watchdog x arm x prompt set in one table (`docs/pilots/CROSS_ANALYSIS_precedent_arms.md`); picks up new Modal runs, and takes raw folders for the API watchdogs as `"Label=path"` arguments |
 | `talk-pilots/analyse_roc.py` | Sprint work (24 Oct): AUROC and recall at fixed false-positive rates from saved suspicion scores, with a split-half frozen threshold |
 
