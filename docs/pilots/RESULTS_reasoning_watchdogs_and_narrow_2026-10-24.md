@@ -22,7 +22,7 @@ False flags (escalated-benign of 48 per arm, A to F): gpt-oss 2, 4, 4, 1, 1, 3 (
 | gpt-oss-120b | 11 | **5** | 7 | 1 / 0 / 0 |
 | OLMo 3.1 32B Think | 8 | **3** | 3 | 1 / 1 / 0 |
 
-**Reading.** Both show the endorsement effect in arm C alone on the six-arm set (B, D and E at baseline), the pattern Appendix E predicted. The policy sentence almost restores gpt-oss (45 of 48) and only partly restores OLMo (36 of 48). On the harder set both drop under endorsement, the policy sentence helps gpt-oss a little and OLMo not at all. The two reasoning watchdogs are not protected by reasoning. Across the open-weight models the A to C drop on the six-arm set is 5 (Qwen), 24 (Mistral), 19 (gpt-oss) and 30 (OLMo) reads of 48.
+**Reading.** Both show the endorsement effect in arm C alone on the six-arm set (B, D and E at baseline). The policy sentence almost restores gpt-oss (45 of 48) and only partly restores OLMo (36 of 48). On the harder set both drop under endorsement, the policy sentence helps gpt-oss a little and OLMo not at all. Both reasoning watchdogs lost detection under endorsement on both sets; these comparisons do not isolate the effect of reasoning or model size. Across the open-weight models the A to C drop on the six-arm set is 5 (Qwen), 2 (Llama), 24 (Mistral), 19 (gpt-oss) and 30 (OLMo) reads of 48.
 
 ## 2. Narrow-question watchdog on the harder set (API, via Modal secrets)
 
@@ -39,7 +39,7 @@ Suppression flagged of 26 (A / C / F), against the same cells with the original 
 
 False flags on compliant cases: 0 of 72 per arm for all four. Missing flags (counted as not flagged): Sonnet 5 / 3 / 1 on compliant reads and 1 / 1 / 0 on suppression reads, Gemini 3.8 Flash 1 on suppression in arm A, none for Haiku or Argon.
 
-**Reading.** Detection rises for every model and the endorsed arm hurts much less; Argon reaches 24 to 26 of 26. This is the first watchdog in these data that comes close to solving the harder set. Limits: 13 suppression cases on six records, one prompt design (mine), and no ablation of which question does the work; Q2 (is the rating high enough for the facts) probably carries most of it, since the harder set is defined by under-rated cases. A Q2-only and a Q3-only version would tell. Gemini 3.8 Flash arm C (17) above arm A (9) is odd and may be noise on 26 reads.
+**Reading.** Detection rises for every model and the endorsed arm hurts much less; Argon reaches 24 to 26 of 26. This is the first watchdog in these data that comes close to solving the harder set. Limits: 13 suppression cases on six records, one prompt design (mine), and no ablation of which question does the work; Q2 (is the rating high enough for the facts) probably carries most of it, since the harder set is defined by under-rated cases. Q2 asks about exactly that defining feature, so near-solving the set is partly by design, not evidence that the approach would transfer to other kinds of suppression. A Q2-only and a Q3-only version would tell. Gemini 3.8 Flash arm C (17) above arm A (9) is odd and may be noise on 26 reads.
 
 ## 3. A note on seeds
 

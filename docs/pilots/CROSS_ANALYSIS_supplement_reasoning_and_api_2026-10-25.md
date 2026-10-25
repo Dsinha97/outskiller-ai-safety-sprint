@@ -1,5 +1,7 @@
 # Cross-model analysis, supplement: gpt-oss-120b, OLMo 3.1 32B Think and raw API detail (2026-10-25)
 
+> **Superseded.** `CROSS_ANALYSIS_precedent_arms.md` on main was rebuilt from the same raw folders and has these watchdogs in the full table. This file is kept only for the false-flag and missing-flag counts it printed from the raw API folders.
+
 Produced with `talk-pilots/cross_analysis.py` from this branch, run on the raw result folders held by Deepayan Sinha (the two Modal reasoning models and the four direct-API watchdogs). It is a **supplement**, not a replacement: the full table in `CROSS_ANALYSIS_precedent_arms.md` also has the OpenRouter watchdogs and the Gemma section, whose raw folders are on Liezl's machine, so this output could not rebuild those rows. To get one table, copy `gpt-oss-120b/` and `olmo-3.1-32b-think/` into `modal-handover/results/` and run the script on the machine with all the folders, passing the four API folders as in the PR 9 description.
 
 What the raw files add over the copied counts: false flags and missing flags for the four API watchdogs (the counts in the table below match those in `RESULTS_api_monitors_2026-10-24.md`).
